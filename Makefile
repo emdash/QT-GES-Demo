@@ -1,4 +1,9 @@
-LIBS=gstreamer-0.10 gstreamer-editing-services-plugins-0.10 QtCore QtGui
+LIBS=gstreamer-0.10\
+	gstreamer-editing-services-plugins-0.10\
+	QtCore\
+	QtGui\
+	QtDeclarative
+
 SRCS=main.cpp
 
 CFLAGS=`pkg-config --cflags --libs $(LIBS)`
