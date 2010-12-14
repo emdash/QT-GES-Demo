@@ -26,7 +26,12 @@ int Timeline::rowCount(const QModelIndex &parent) const
 
 QVariant Timeline::data(const QModelIndex &index, int role) const
 {
-  return QVariant::fromValue(QString("media/thumbmails/20100510_007.png")); 
+  switch (role) {
+  case uri:
+    return QVariant::fromValue(QString("media/thumbnails/20100510_007.png"));
+  case duration:
+    return QVariant::fromValue(0);
+  };
 }
 
 bool Timeline::canFetchMore(const QModelIndex &parent) const
