@@ -19,6 +19,7 @@ class Timeline : public QAbstractListModel {
 
  signals:
   void numberPopulated(int number);
+  void countChanged(int count);
   
  public slots:
 
