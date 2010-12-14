@@ -30,10 +30,6 @@ Item {
         // later the ListModel can be replaced with a proxy for a GESTimeline
 
         model: ListModel {
-            ListElement {
-                uri: "pics/pic001.jpg"
-                duration: 1
-            }
         }
 
         anchors {
