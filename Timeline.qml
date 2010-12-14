@@ -1,4 +1,5 @@
 import Qt 4.7
+import GES 1.0
 
 Item {
     id:screen
@@ -29,7 +30,7 @@ Item {
         // create an item for each element in a ListModel
         // later the ListModel can be replaced with a proxy for a GESTimeline
 
-        model: ListModel {
+        model: GESTimeline {
         }
 
         anchors {
