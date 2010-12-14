@@ -1,8 +1,17 @@
 #include "timeline.h"
 
+enum roles {
+  uri,
+  duration
+};
+
 Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
+  QHash <int, QByteArray> rolenames;
+  rolenames[uri] = "uri";
+  rolenames[duration] = "duration";
+  setRoleNames(rolenames);
 }
 
 Timeline::~Timeline()
