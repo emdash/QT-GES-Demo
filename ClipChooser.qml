@@ -11,21 +11,35 @@ Item {
         right: parent.right
     }
 
-
     Grid {
         id:items
         spacing: 5
         Repeater {
             model: ListModel {
-                ListElement { uri: "pics/pic001.jpg" }
-                ListElement { uri: "pics/pic002.jpg" }
-                ListElement { uri: "pics/pic003.jpg" }
-                ListElement { uri: "pics/pic004.jpg" }
-            }
+	    	   ListElement {
+	    	   	       thumb: "media/thumbnails/20100510_007.png"
+			       uri: "media/20100510_007.jpg"
+	           }
+
+		   ListElement {
+		   	       thumb: "media/thumbnails/20100512_003.png"
+			       uri: "media/20100512_003.png"
+		   }
+
+		   ListElement {
+		   	       thumb: "media/thumbnails/AVRO1036K.png"
+			       uri: "media/AVRO1036K.wmv"
+	           }
+
+		   ListElement {
+		   	       thumb: "media/thumbnails/small-mvi_0009.png"
+			       uri: "media/small-mvi_0009.avi"
+	           }
+	    }
             delegate: Image {
                 width: 100
                 height: 100
-                source: uri
+                source: thumb
                 fillMode: Image.PreserveAspectFit
             }
         }
