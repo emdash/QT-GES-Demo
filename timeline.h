@@ -32,6 +32,7 @@ class Timeline : public QAbstractListModel {
   
  private:
   GESTimeline *timeline;
+  GESSimpleTimelineLayer *layer;
   int row_count;
 };
 

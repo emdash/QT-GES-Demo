@@ -8,6 +8,9 @@ enum roles {
 Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
+  layer = ges_simple_timeline_layer_new();
+  ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
+
   QHash <int, QByteArray> rolenames;
   rolenames[uri] = "uri";
   rolenames[duration] = "duration";
