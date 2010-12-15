@@ -5,12 +5,20 @@ enum roles {
   duration
 };
 
+void
+layer_object_added_cb(GESTimelineLayer *layer, GESTimelineObject * obj, Timeline * timeline)
+{
+  timeline->privAddObject(obj);
+}
+
 Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
   layer = ges_simple_timeline_layer_new();
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
 
+  g_signal_connect(G_OBJECT(layer), "object-added", G_CALLBACK(layer_object_added_cb), this);
+  
   QHash <int, QByteArray> rolenames;
   rolenames[uri] = "uri";
   rolenames[duration] = "duration";
