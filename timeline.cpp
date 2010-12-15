@@ -54,6 +54,9 @@ void Timeline::fetchMore(const QModelIndex &parent)
 
 void Timeline::append(QString uri)
 {
+  QByteArray foo = uri.toUtf8();
+  GESTimelineFileSource *src = ges_timeline_filesource_new (foo.data());
+  ges_simple_timeline_layer_add_object (layer, GES_TIMELINE_OBJECT(src), -1);
 }
 
 void Timeline::privAddObject(GESTimelineObject * obj)
