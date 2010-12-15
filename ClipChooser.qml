@@ -16,6 +16,7 @@ Item {
         spacing: 5
         Repeater {
             model: ListModel {
+	    	   id:data
 	    	   ListElement {
 	    	   	       thumb: "media/thumbnails/20100510_007.png"
 			       uri: "media/20100510_007.jpg"
@@ -37,6 +38,7 @@ Item {
 	           }
 	    }
             delegate: Image {
+	        property int position: index
                 width: 100
                 height: 100
                 source: thumb
@@ -89,8 +91,10 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: { 
-            itemChosen(items.childAt(mouse.x, mouse.y).source)
+        onClicked: {
+	    var idx = items.childAt(mouse.x, mouse.y).position
+	    var obj = data.get(idx)
+            itemChosen(obj.uri)
         }
     }
 }

@@ -119,8 +119,9 @@ Item {
 
         onItemChosen: {
             chooser.state = "invisible"
+	    console.log(item)
             if (item != null) {
-                timeline.model.append({"uri": item, "duration": 1.0})
+                timeline.model.append(item)
             }
         }
 

@@ -51,6 +51,7 @@ void Timeline::fetchMore(const QModelIndex &parent)
 
 void Timeline::append(QString uri)
 {
+  qDebug() << uri;
   beginInsertRows(QModelIndex(), row_count, row_count);
   row_count++;
   endInsertRows();
