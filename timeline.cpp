@@ -54,7 +54,10 @@ void Timeline::fetchMore(const QModelIndex &parent)
 
 void Timeline::append(QString uri)
 {
-  qDebug() << uri;
+}
+
+void Timeline::privAddObject(GESTimelineObject * obj)
+{
   beginInsertRows(QModelIndex(), row_count, row_count);
   row_count++;
   endInsertRows();

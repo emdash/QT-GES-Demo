@@ -31,6 +31,7 @@ class Timeline : public QAbstractListModel {
   void fetchMore(const QModelIndex &parent);
   
  private:
+  void privAddObject(GESTimelineObject *);
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
   int row_count;
