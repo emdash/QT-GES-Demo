@@ -12,6 +12,7 @@ Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
   rolenames[uri] = "uri";
   rolenames[duration] = "duration";
   setRoleNames(rolenames);
+  row_count = 0;
 }
 
 Timeline::~Timeline()
@@ -21,7 +22,12 @@ Timeline::~Timeline()
 
 int Timeline::rowCount(const QModelIndex &parent) const
 {
-  return 1;
+  return row_count;
+}
+
+int Timeline::count()
+{
+  return row_count;
 }
 
 QVariant Timeline::data(const QModelIndex &index, int role) const
@@ -41,4 +47,43 @@ bool Timeline::canFetchMore(const QModelIndex &parent) const
 
 void Timeline::fetchMore(const QModelIndex &parent)
 {
+}
+
+void Timeline::append(QString uri)
+{
+  beginInsertRows(QModelIndex(), row_count, row_count);
+  row_count++;
+  endInsertRows();
+  emit countChanged(row_count);
+}
+
+static void swap(int &a, int &b)
+{
+  int temp;
+  temp = a;
+  a = b;
+  b = temp;
+}
+
+void Timeline::move(int source, int dest, int n)
+{
+  QModelIndex parent;
+
+  /* FIXME: currently ignoring the 'n' parameter */
+  /* FIXME: there's something I don't understand about the API,
+     because it seems to be impossible to increment an item's position
+     by one. So if the destination is one greater than the source,
+     swap dest and source. It seems to work fine.
+  */
+  if (dest == (source + 1)) {
+    swap(source, dest);
+  }
+  
+
+  qDebug() << source << dest;
+  if (!beginMoveRows(parent, source, source, parent, dest)) {
+    qDebug() << "early exit";
+    return;
+  }
+  endMoveRows();
 }

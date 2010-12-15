@@ -9,6 +9,7 @@
 
 class Timeline : public QAbstractListModel {
   Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 
     
  public:
@@ -16,9 +17,11 @@ class Timeline : public QAbstractListModel {
   ~Timeline();
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  int count();
+  Q_INVOKABLE void append(QString uri);
+  Q_INVOKABLE void move(int source, int dest, int n);
 
  signals:
-  void numberPopulated(int number);
   void countChanged(int count);
   
  public slots:
@@ -29,6 +32,7 @@ class Timeline : public QAbstractListModel {
   
  private:
   GESTimeline *timeline;
+  int row_count;
 };
 
 #endif
