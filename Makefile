@@ -10,7 +10,7 @@ SRCS=main.cpp\
 
 HEADERS=timeline.h
 
-CFLAGS=`pkg-config --cflags --libs $(LIBS)`
+CFLAGS=-g `pkg-config --cflags --libs $(LIBS)`
 
 
 all: $(SRCS) $(HEADERS)
