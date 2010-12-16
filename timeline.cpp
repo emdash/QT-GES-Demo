@@ -56,13 +56,14 @@ void Timeline::privDurationChanged(GESTimelineObject *obj)
 {
   qDebug() << GES_TIMELINE_OBJECT_DURATION (obj);
 
-  /* for simplicity we simply update the entire model, but in the
-     future should probably only update the row belonging to this
-     object.  We are missing the routine in GES which allows
-     us to determine the position of an object.
-  */
+  gint index = ges_simple_timeline_layer_index(layer, obj);
+  
+  if (index == -1) {
+    qDebug() << "houston, we have a problem";
+    return;
+  }
 
-  emit dataChanged(createIndex(0, 0), createIndex(row_count, 1));
+  emit dataChanged(createIndex(index, 0), createIndex(index + 1, 1));
 }
 
 QString Timeline::thumbForObject(GESTimelineObject * obj) const
