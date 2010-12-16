@@ -30,6 +30,11 @@ Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
   rolenames[duration] = "duration";
   setRoleNames(rolenames);
   row_count = 0;
+  
+  thumbs["media/20100510_007.jpg"] = "media/thumbnails/20100510_007.png";
+  thumbs["media/20100512_003.png"] = "media/thumbnails/20100512_003.png";
+  thumbs["media/AVRO1036K.wmv"] = "media/thumbnails/AVRO1036K.png";
+  thumbs["media/small-mvi_0009.avi"] = "media/thumbnails/small-mvi_0009.png";
 }
 
 Timeline::~Timeline()
@@ -59,6 +64,14 @@ void Timeline::privDurationChanged(GESTimelineObject *obj)
 
   emit dataChanged(createIndex(0, 0), createIndex(row_count, 1));
 }
+
+QString Timeline::thumbForObject(GESTimelineObject * obj) const
+{
+  gchar * uri;
+  g_object_get(G_OBJECT(obj), "uri", &uri, NULL);
+  QString quri(uri);
+  g_free(uri);
+  return thumbs[quri];
 }
 
 QVariant Timeline::data(const QModelIndex &index, int role) const
