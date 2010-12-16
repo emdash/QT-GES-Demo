@@ -103,7 +103,7 @@ void Timeline::fetchMore(const QModelIndex &parent)
 {
 }
 
-void Timeline::append(QString uri)
+void Timeline::appendPath(QString path)
 {
   QString url = QUrl::fromLocalFile(QDir(path).absolutePath()).toString();
   GESTimelineFileSource *src = ges_timeline_filesource_new (url.toUtf8().data());

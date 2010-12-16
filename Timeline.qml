@@ -121,7 +121,7 @@ Item {
             chooser.state = "invisible"
 	    console.log(item)
             if (item != null) {
-                timeline.model.append(item)
+                timeline.model.appendPath(item)
             }
         }
 

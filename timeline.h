@@ -18,7 +18,7 @@ class Timeline : public QAbstractListModel {
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   int count();
-  Q_INVOKABLE void append(QString uri);
+  Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
 
  signals:
