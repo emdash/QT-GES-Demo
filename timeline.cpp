@@ -71,7 +71,9 @@ QString Timeline::thumbForObject(GESTimelineObject * obj) const
   g_object_get(G_OBJECT(obj), "uri", &uri, NULL);
   QString quri(uri);
   g_free(uri);
-  return thumbs[quri];
+  QString local = QUrl(quri).toLocalFile();
+  QString relative = QDir::current().relativeFilePath(local);
+  return thumbs[relative];
 }
 
 QVariant Timeline::data(const QModelIndex &index, int role) const
@@ -103,8 +105,8 @@ void Timeline::fetchMore(const QModelIndex &parent)
 
 void Timeline::append(QString uri)
 {
-  QByteArray foo = uri.toUtf8();
-  GESTimelineFileSource *src = ges_timeline_filesource_new (foo.data());
+  QString url = QUrl::fromLocalFile(QDir(path).absolutePath()).toString();
+  GESTimelineFileSource *src = ges_timeline_filesource_new (url.toUtf8().data());
   ges_simple_timeline_layer_add_object (layer, GES_TIMELINE_OBJECT(src), -1);
 }
 
