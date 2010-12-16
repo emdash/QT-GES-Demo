@@ -4,10 +4,6 @@ import GES 1.0
 Item {
     id:screen
 
-    function formatDuration(duration) {
-        return Math.floor(duration / 60) + "m " + (duration % 60) + "s"
-    }
-
     // basic layout properties
 
     SystemPalette { id: activePalette }

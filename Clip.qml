@@ -24,7 +24,7 @@ Item {
 
     Text {
         id: durationLabel
-        text: formatDuration(duration)
+        text: duration
         height: 25
         color: "white"
         anchors.bottom: parent.bottom

@@ -77,6 +77,14 @@ QString Timeline::thumbForObject(GESTimelineObject * obj) const
   return thumbs[relative];
 }
 
+static QString timeToString(guint64 time)
+{
+  gchar buffer[30];
+  g_snprintf(buffer, sizeof(buffer), "%u:%02u:%02u.%09u",
+	     GST_TIME_ARGS(time));
+  return QString(buffer);
+}
+
 QVariant Timeline::data(const QModelIndex &index, int role) const
 {
   GESTimelineObject * object = ges_simple_timeline_layer_nth(layer, index.row());
@@ -89,7 +97,7 @@ QVariant Timeline::data(const QModelIndex &index, int role) const
   case uri:
     return thumbForObject(object);
   case duration:
-    return QVariant::fromValue(GES_TIMELINE_OBJECT_DURATION(object));
+    return timeToString(GES_TIMELINE_OBJECT_DURATION(object));
   default:
     return QVariant::fromValue(QString("Invalid role " + role));
   };
