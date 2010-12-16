@@ -17,6 +17,15 @@ timeline_object_notify_duration_cb(GESTimelineObject *obj, GParamSpec *param, Ti
   timeline->privDurationChanged(obj);
 }
 
+static void timeline_object_notify_is_image_cb(GESTimelineObject * obj,
+					       Timeline * timeline)
+{
+  gboolean image;
+  g_object_get(G_OBJECT(obj), "is-image", &image, NULL);
+  if (image)
+    g_object_set(G_OBJECT(obj), "duration", (guint64) GST_SECOND, NULL);
+}
+
 Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
@@ -116,6 +125,12 @@ void Timeline::appendPath(QString path)
 {
   QString url = QUrl::fromLocalFile(QDir(path).absolutePath()).toString();
   GESTimelineFileSource *src = ges_timeline_filesource_new (url.toUtf8().data());
+
+  g_signal_connect(G_OBJECT(src),
+		   "notify::is-image",
+		   G_CALLBACK(timeline_object_notify_is_image_cb),
+		   this);
+  
   ges_simple_timeline_layer_add_object (layer, GES_TIMELINE_OBJECT(src), -1);
 }
 
