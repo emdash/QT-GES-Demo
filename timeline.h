@@ -32,10 +32,12 @@ class Timeline : public QAbstractListModel {
   
  private:
   void privAddObject(GESTimelineObject *);
+  void privDurationChanged(GESTimelineObject *);
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
   int row_count;
   friend void layer_object_added_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
+  friend void timeline_object_notify_duration_cb (GESTimelineObject *, GParamSpec *, Timeline *);
 };
 
 #endif

@@ -11,6 +11,12 @@ layer_object_added_cb(GESTimelineLayer *layer, GESTimelineObject * obj, Timeline
   timeline->privAddObject(obj);
 }
 
+void
+timeline_object_notify_duration_cb(GESTimelineObject *obj, GParamSpec *param, Timeline * timeline)
+{
+  timeline->privDurationChanged(obj);
+}
+
 Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
@@ -41,13 +47,35 @@ int Timeline::count()
   return row_count;
 }
 
+void Timeline::privDurationChanged(GESTimelineObject *obj)
+{
+  qDebug() << GES_TIMELINE_OBJECT_DURATION (obj);
+
+  /* for simplicity we simply update the entire model, but in the
+     future should probably only update the row belonging to this
+     object.  We are missing the routine in GES which allows
+     us to determine the position of an object.
+  */
+
+  emit dataChanged(createIndex(0, 0), createIndex(row_count, 1));
+}
+}
+
 QVariant Timeline::data(const QModelIndex &index, int role) const
 {
+  GESTimelineObject * object = ges_simple_timeline_layer_nth(layer, index.row());
+
+  if (!object) {
+    return QVariant::fromValue(QString("Invalid index"));
+  }
+
   switch (role) {
   case uri:
     return QVariant::fromValue(QString("media/thumbnails/20100510_007.png"));
   case duration:
-    return QVariant::fromValue(0);
+    return QVariant::fromValue(GES_TIMELINE_OBJECT_DURATION(object));
+  default:
+    return QVariant::fromValue(QString("Invalid role " + role));
   };
 }
 
@@ -73,6 +101,10 @@ void Timeline::privAddObject(GESTimelineObject * obj)
   row_count++;
   endInsertRows();
   emit countChanged(row_count);
+  g_signal_connect(G_OBJECT(obj),
+		   "notify::duration",
+		   G_CALLBACK(timeline_object_notify_duration_cb),
+		   this);
 }
 
 static void swap(int &a, int &b)
