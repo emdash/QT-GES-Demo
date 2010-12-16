@@ -77,14 +77,14 @@ QString Timeline::thumbForObject(GESTimelineObject * obj) const
 QVariant Timeline::data(const QModelIndex &index, int role) const
 {
   GESTimelineObject * object = ges_simple_timeline_layer_nth(layer, index.row());
-
+  
   if (!object) {
     return QVariant::fromValue(QString("Invalid index"));
   }
-
+  
   switch (role) {
   case uri:
-    return QVariant::fromValue(QString("media/thumbnails/20100510_007.png"));
+    return thumbForObject(object);
   case duration:
     return QVariant::fromValue(GES_TIMELINE_OBJECT_DURATION(object));
   default:
