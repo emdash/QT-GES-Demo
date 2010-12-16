@@ -33,7 +33,7 @@ class Timeline : public QAbstractListModel {
  private:
   void privAddObject(GESTimelineObject *);
   void privDurationChanged(GESTimelineObject *);
-  QString thumbForObject(GESTimelineObject * uri) const;
+  QString thumbForObject(GESTimelineObject *) const;
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
   int row_count;
