@@ -20,6 +20,7 @@ class Timeline : public QAbstractListModel {
   int count();
   Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
+  Q_INVOKABLE void remove(int index);
   Q_INVOKABLE void preview();
 
  signals:
@@ -34,6 +35,7 @@ class Timeline : public QAbstractListModel {
  private:
   void privAddObject(GESTimelineObject *);
   void privDurationChanged(GESTimelineObject *);
+  void privRemoveObject(GESTimelineObject *);
   void privMoveObject(gint source, gint dest);
   QString thumbForObject(GESTimelineObject *) const;
   GESTimeline *timeline;
@@ -43,6 +45,7 @@ class Timeline : public QAbstractListModel {
   QHash<QString, QString> thumbs;
   friend void layer_object_added_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
   friend void layer_object_moved_cb (GESTimelineLayer *, GESTimelineObject *, gint, gint, Timeline *);
+  friend void layer_object_removed_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
   friend void timeline_object_notify_duration_cb (GESTimelineObject *, GParamSpec *, Timeline *);
 };
 

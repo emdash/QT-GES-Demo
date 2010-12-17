@@ -12,6 +12,10 @@ void layer_object_added_cb(GESTimelineLayer *,
   GESTimelineObject *,
   Timeline *);
 
+void layer_object_removed_cb(GESTimelineLayer *,
+  GESTimelineObject *,
+  Timeline *);
+
 void layer_object_moved_cb(GESTimelineLayer *,
   GESTimelineObject *,
   gint,
@@ -37,6 +41,8 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
     G_CALLBACK(layer_object_added_cb), this);
   g_signal_connect(G_OBJECT(layer), "object-moved",
     G_CALLBACK(layer_object_moved_cb), this);
+  g_signal_connect(G_OBJECT(layer), "object-removed",
+    G_CALLBACK(layer_object_removed_cb), this);
 
   QHash <int, QByteArray> rolenames;
   rolenames[uri] = "uri";
@@ -208,6 +214,42 @@ privAddObject(GESTimelineObject * obj)
     this);
 }
 
+/* functions and methods related to removing objects from the timeline */
+
+/* Note, this isn't quite right. I call beginRemoveRows() in remove(),
+   because at that point we still know what the index is going to
+   be. really we should wait until privRemoveObject, but by this time
+   the object has been removed from the layer, so we can't work out
+   what the index was. At some point this will be fixed in GES, and
+   then we should fix it here too. */
+
+void
+layer_object_removed_cb(GESTimelineLayer * layer,
+  GESTimelineObject * object,
+  Timeline * timeline)
+{
+  timeline->privRemoveObject(object);
+}
+
+
+void Timeline::
+privRemoveObject(GESTimelineObject * object)
+{
+  row_count--;
+  endRemoveRows();
+}
+
+
+void Timeline::
+remove(int index)
+{
+  GESTimelineObject * obj;
+  if (!(obj = ges_simple_timeline_layer_nth(layer, index)))
+    return;
+   
+  beginRemoveRows(QModelIndex(), index, index);
+  ges_timeline_layer_remove_object(GES_TIMELINE_LAYER(layer), obj);
+}
 
 /* functions and methods related to re-ordering the timeline */
 

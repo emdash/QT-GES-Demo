@@ -22,6 +22,22 @@ Item {
         fillMode: Image.PreserveAspectFit
     }
 
+    Button {
+		   anchors {
+		   		   right: parent.right
+				   top: parent.top
+				   rightMargin: 12
+				   topMargin: 12
+		   }
+		   width: 25
+		   height: 25
+		   text: "X"
+
+		   onClicked: {
+					  timeline.model.remove(index)
+		   }
+    }
+
     Text {
         id: durationLabel
         text: duration
