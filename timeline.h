@@ -33,12 +33,14 @@ class Timeline : public QAbstractListModel {
  private:
   void privAddObject(GESTimelineObject *);
   void privDurationChanged(GESTimelineObject *);
+  void privMoveObject(gint source, gint dest);
   QString thumbForObject(GESTimelineObject *) const;
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
   int row_count;
   QHash<QString, QString> thumbs;
   friend void layer_object_added_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
+  friend void layer_object_moved_cb (GESTimelineLayer *, GESTimelineObject *, gint, gint, Timeline *);
   friend void timeline_object_notify_duration_cb (GESTimelineObject *, GParamSpec *, Timeline *);
 };
 

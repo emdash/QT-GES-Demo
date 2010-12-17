@@ -12,6 +12,15 @@ layer_object_added_cb(GESTimelineLayer *layer, GESTimelineObject * obj, Timeline
 }
 
 void
+layer_object_moved_cb(GESTimelineLayer *layer,
+		      GESTimelineObject * obj,
+		      gint old, gint new_,
+		      Timeline * timeline)
+{
+  timeline->privMoveObject(old, new_);
+}
+
+void
 timeline_object_notify_duration_cb(GESTimelineObject *obj, GParamSpec *param, Timeline * timeline)
 {
   timeline->privDurationChanged(obj);
@@ -33,6 +42,7 @@ Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
 
   g_signal_connect(G_OBJECT(layer), "object-added", G_CALLBACK(layer_object_added_cb), this);
+  g_signal_connect(G_OBJECT(layer), "object-moved", G_CALLBACK(layer_object_moved_cb), this);
   
   QHash <int, QByteArray> rolenames;
   rolenames[uri] = "uri";
@@ -155,6 +165,12 @@ static void swap(int &a, int &b)
 }
 
 void Timeline::move(int source, int dest, int n)
+{
+  GESTimelineObject *obj = ges_simple_timeline_layer_nth (layer, source);
+  ges_simple_timeline_layer_move_object(layer, obj, dest);
+}
+
+void Timeline::privMoveObject(int source, int dest)
 {
   QModelIndex parent;
 
