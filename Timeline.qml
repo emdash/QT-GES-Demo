@@ -91,6 +91,7 @@ Item {
                 text: "Preview"
 
                 onClicked: {
+		   timeline.model.preview();
                 }
             }
         }

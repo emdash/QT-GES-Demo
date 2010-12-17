@@ -39,6 +39,8 @@ Timeline::Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
   layer = ges_simple_timeline_layer_new();
+  pipeline = ges_timeline_pipeline_new ();
+  ges_timeline_pipeline_add_timeline(pipeline, timeline);
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
 
   g_signal_connect(G_OBJECT(layer), "object-added", G_CALLBACK(layer_object_added_cb), this);
@@ -191,4 +193,10 @@ void Timeline::privMoveObject(int source, int dest)
     return;
   }
   endMoveRows();
+}
+
+void Timeline::preview()
+{
+  ges_timeline_pipeline_set_mode(pipeline, TIMELINE_MODE_PREVIEW);
+  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
 }

@@ -20,6 +20,7 @@ class Timeline : public QAbstractListModel {
   int count();
   Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
+  Q_INVOKABLE void preview();
 
  signals:
   void countChanged(int count);
@@ -37,6 +38,7 @@ class Timeline : public QAbstractListModel {
   QString thumbForObject(GESTimelineObject *) const;
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
+  GESTimelinePipeline *pipeline;
   int row_count;
   QHash<QString, QString> thumbs;
   friend void layer_object_added_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
