@@ -180,10 +180,10 @@ void Timeline::privMoveObject(int source, int dest)
      by one. So if the destination is one greater than the source,
      swap dest and source. It seems to work fine.
   */
+
   if (dest == (source + 1)) {
     swap(source, dest);
   }
-  
 
   qDebug() << source << dest;
   if (!beginMoveRows(parent, source, source, parent, dest)) {
