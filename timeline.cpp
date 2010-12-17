@@ -59,6 +59,7 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 
 Timeline::~Timeline()
 {
+  gst_object_unref(GST_OBJECT(pipeline));
   gst_object_unref(GST_OBJECT(timeline));
 }
 
