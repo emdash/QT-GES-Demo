@@ -15,3 +15,7 @@ $ ./ges-demo
 Installing:
 
 don't.
+
+Bugs:
+
+You need to drag each clip slightly before its delete button will work.
