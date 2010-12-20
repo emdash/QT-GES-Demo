@@ -99,6 +99,13 @@ Item {
 		   }
                 }
             }
+
+	    Button {
+	       id:stopButton
+	       height: parent.height - 24
+	       text: "Stop"
+	       onClicked: timeline.model.stop()
+	    }
         }
         Text {
             id: status
