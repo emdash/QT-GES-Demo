@@ -88,7 +88,6 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 
   thumbs["media/20100510_007.jpg"] = "media/thumbnails/20100510_007.png";
   thumbs["media/20100512_003.png"] = "media/thumbnails/20100512_003.png";
-  thumbs["media/AVRO1036K.wmv"] = "media/thumbnails/AVRO1036K.png";
   thumbs["media/small-mvi_0009.avi"] = "media/thumbnails/small-mvi_0009.png";
 }
 
