@@ -26,6 +26,34 @@ void timeline_object_notify_duration_cb(GESTimelineObject *,
   GParamSpec *,
   Timeline *);
 
+/* bus message handler so we can track things like EOS and state changes */
+
+void
+bus_message_cb (GstBus * bus, GstMessage * message, Timeline * timeline)
+{
+  const GstStructure *s;
+  s = gst_message_get_structure (message);
+
+  switch (GST_MESSAGE_TYPE (message)) {
+  case GST_MESSAGE_ERROR:
+    g_print ("ERROR\n");
+    break;
+  case GST_MESSAGE_EOS:
+    timeline->stop();
+    break;
+  case GST_MESSAGE_STATE_CHANGED:
+    if (s && GST_MESSAGE_SRC (message) == GST_OBJECT_CAST (timeline->pipeline)) {
+      GstState old, new_, pending;
+      gst_message_parse_state_changed (message, &old, &new_, &pending);
+      timeline->privSetState(new_);
+    }
+    break;
+  default:
+    break;
+  }
+}
+
+
 /* class constructor */
 
 Timeline::
@@ -36,6 +64,14 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   pipeline = ges_timeline_pipeline_new ();
   ges_timeline_pipeline_add_timeline(pipeline, timeline);
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
+
+  GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
+  gst_bus_add_signal_watch(bus);
+
+  m_state = GST_STATE_NULL;
+
+  g_signal_connect(G_OBJECT(bus), "message",
+    G_CALLBACK(bus_message_cb), this);
 
   g_signal_connect(G_OBJECT(layer), "object-added",
     G_CALLBACK(layer_object_added_cb), this);
@@ -62,7 +98,6 @@ Timeline::~Timeline()
   gst_object_unref(GST_OBJECT(pipeline));
   gst_object_unref(GST_OBJECT(timeline));
 }
-
 
 /* functions and methods implementing the QAbstractListModel
    interface */
@@ -307,10 +342,29 @@ privMoveObject(int source, int dest)
   endMoveRows();
 }
 
+/* playback state funtions and methods */
 
 void Timeline::
 preview()
 {
   ges_timeline_pipeline_set_mode(pipeline, TIMELINE_MODE_PREVIEW);
   gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+}
+
+void Timeline::
+pause()
+{
+  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
+}
+
+void Timeline::
+stop()
+{
+  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_READY);
+}
+
+void Timeline::
+privSetState(GstState state)
+{
+  m_state = state;
 }
