@@ -1,0 +1,17 @@
+A GES Demo sporting a QT and QML
+
+Compiling:
+
+Make sure you have gstreamer, gst-convenience, and
+gst-editing-services installed somewhere. Note: last I checked,
+gst-editing services didn't install a .pc file, so I wrote my own.
+
+$ make
+
+Running:
+
+$ ./ges-demo
+
+Installing:
+
+don't.
