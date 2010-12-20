@@ -28,11 +28,6 @@ Item {
 		   }
 
 		   ListElement {
-		   	       thumb: "media/thumbnails/AVRO1036K.png"
-			       uri: "media/AVRO1036K.wmv"
-	           }
-
-		   ListElement {
 		   	       thumb: "media/thumbnails/small-mvi_0009.png"
 			       uri: "media/small-mvi_0009.avi"
 	           }
