@@ -366,5 +366,16 @@ stop()
 void Timeline::
 privSetState(GstState state)
 {
+  bool wasPlaying = playing();
   m_state = state;
+  if (playing() != wasPlaying)
+  {
+    emit playingChanged(playing());
+  }
+}
+
+bool Timeline::
+playing()
+{
+  return m_state == GST_STATE_PLAYING;
 }

@@ -10,6 +10,7 @@
 class Timeline : public QAbstractListModel {
   Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
+    Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
 
     
  public:
@@ -18,6 +19,7 @@ class Timeline : public QAbstractListModel {
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   int count();
+  bool playing();
   Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
   Q_INVOKABLE void remove(int index);
@@ -27,6 +29,7 @@ class Timeline : public QAbstractListModel {
 
  signals:
   void countChanged(int count);
+  void playingChanged(bool isPlaying);
   
  public slots:
 
