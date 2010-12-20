@@ -88,10 +88,15 @@ Item {
             Button {
                 id:previewButton
                 height: parent.height - 24
-                text: "Preview"
+                text: timeline.model.playing ? "Pause" : "Preview"
 
                 onClicked: {
-		   timeline.model.preview();
+	           if (timeline.model.playing) {
+		      timeline.model.pause()
+		   }
+		   else {
+		     timeline.model.preview();
+		   }
                 }
             }
         }
