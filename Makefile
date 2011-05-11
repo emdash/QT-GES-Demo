@@ -1,5 +1,5 @@
 LIBS=gstreamer-0.10\
-	gstreamer-editing-services-plugins-0.10\
+	gst-editing-services-0.10\
 	QtCore\
 	QtGui\
 	QtDeclarative
