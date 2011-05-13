@@ -113,8 +113,11 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 
 Timeline::~Timeline()
 {
-  gst_object_unref(GST_OBJECT(pipeline));
-  gst_object_unref(GST_OBJECT(timeline));
+  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
+  // FIXME: why does this call throw std::bad_alloc?
+  // gst_object_unref(GST_OBJECT(pipeline));
+  pipeline = 0;
+  timeline = 0;
 }
 
 /* functions and methods implementing the QAbstractListModel
