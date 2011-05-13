@@ -36,6 +36,11 @@ int main(int argc, char **argv)
   QDeclarativeView view;
   view.setSource(QUrl::fromLocalFile("Timeline.qml"));
   view.show();
+
+  if (!QDir::current().exists("media")) {
+      qDebug () << "Media files missing. Download them by running './download.sh'";
+      return -1;
+  }
   
   return app.exec();
 }
