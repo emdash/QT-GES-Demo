@@ -37,27 +37,38 @@ Item {
             model: ListModel {
 	    	   id:data
 	    	   ListElement {
-	    	   	       thumb: "media/thumbnails/20100510_007.png"
+	    	   	   thumb: "media/thumbnails/20100510_007.png"
 			       uri: "media/20100510_007.jpg"
 	           }
 
-		   ListElement {
-		   	       thumb: "media/thumbnails/20100512_003.png"
-			       uri: "media/20100512_003.png"
-		   }
+               ListElement {
+                   thumb: "media/thumbnails/20100512_003.png"
+                   uri: "media/20100512_003.jpg"
+               }
 
-		   ListElement {
+	    	   ListElement {
 		   	       thumb: "media/thumbnails/small-mvi_0009.png"
 			       uri: "media/small-mvi_0009.avi"
 	           }
-	    }
-            delegate: Image {
-	        property int position: index
+    
+	    	   ListElement {
+		   	       thumb: "media/thumbnails/mid-Caterpilla_345C_Longfront_01.ogv.jpg"
+		   	       uri: "media/Caterpilla_345C_Longfront_01.ogv"
+	    	    }
+
+		       ListElement {
+			       thumb: "media/thumbnails/mid-Typing_example.ogv.jpg"
+			       uri: "media/Typing_example.ogv"
+		       }
+           }
+
+           delegate: Image {
+	            property int position: index
                 width: 100
                 height: 100
                 source: thumb
                 fillMode: Image.PreserveAspectFit
-            }
+           }
         }
     }
 

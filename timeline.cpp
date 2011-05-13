@@ -105,9 +105,19 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   setRoleNames(rolenames);
   row_count = 0;
 
+  // TODO: implement automatic thumbnailing. For now we have a static
+  // hashtable that maps media uris the thumbail uri
+  
   thumbs["media/20100510_007.jpg"] = "media/thumbnails/20100510_007.png";
-  thumbs["media/20100512_003.png"] = "media/thumbnails/20100512_003.png";
+  thumbs["media/20100512_003.jpg"] = "media/thumbnails/20100512_003.png";
   thumbs["media/small-mvi_0009.avi"] = "media/thumbnails/small-mvi_0009.png";
+  thumbs["media/20100510_007.jpg"] = "media/thumbnails/20100510_007.png";
+
+  thumbs["media/small-mvi_0009.avi"] = "media/thumbnails/small-mvi_0009.png";
+  thumbs["media/Caterpilla_345C_Longfront_01.ogv"] =
+      "media/thumbnails/mid-Caterpilla_345C_Longfront_01.ogv.jpg";
+  thumbs["media/Typing_example.ogv"] = "media/thumbnails/mid-Typing_example.ogv.jpg";
+
 }
 
 
