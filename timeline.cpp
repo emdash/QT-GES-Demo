@@ -27,6 +27,10 @@ enum roles
 
 /* declarations for C friend functions which handle GLib signals */
 
+void timeline_pad_added_cb(GESTimeline *,
+			   GstPad *pad,
+			   Timeline *);
+
 void layer_object_added_cb(GESTimelineLayer *,
   GESTimelineObject *,
   Timeline *);
@@ -80,8 +84,28 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
   layer = ges_simple_timeline_layer_new();
-  pipeline = ges_timeline_pipeline_new ();
-  ges_timeline_pipeline_add_timeline(pipeline, timeline);
+  
+  pipeline = gst_pipeline_new ("GESTimelinePipeline");
+  asnk = gst_element_factory_make ("autoaudiosink", NULL);
+  vsnk = gst_element_factory_make ("autovideosink", NULL);
+  vq = gst_element_factory_make ("queue2", NULL);
+  aq = gst_element_factory_make ("queue2", NULL);
+  aconv = gst_element_factory_make ("audioconvert", NULL);
+  csp = gst_element_factory_make ("ffmpegcolorspace", NULL);
+
+  gst_bin_add_many(GST_BIN(pipeline),
+		   GST_ELEMENT(timeline),
+		   vq,
+		   aq,
+		   vsnk,
+		   asnk,
+		   aconv,
+		   csp,
+		   NULL);
+
+  gst_element_link_many(csp, vq, vsnk, NULL);
+  gst_element_link_many(aconv, aq, asnk, NULL);
+  
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
 
   GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
@@ -98,6 +122,9 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
     G_CALLBACK(layer_object_moved_cb), this);
   g_signal_connect(G_OBJECT(layer), "object-removed",
     G_CALLBACK(layer_object_removed_cb), this);
+
+  g_signal_connect(G_OBJECT(timeline), "pad-added",
+		   G_CALLBACK(timeline_pad_added_cb), this);
 
   QHash <int, QByteArray> rolenames;
   rolenames[uri] = "uri";
@@ -227,6 +254,22 @@ canFetchMore(const QModelIndex &parent) const
 void
 Timeline::fetchMore(const QModelIndex &parent)
 {
+}
+
+/* connect pads to the output sinks */
+
+void
+timeline_pad_added_cb (GESTimeline * gestimeline,
+		       GstPad * pad,
+		       Timeline * timeline)
+{
+    GstPad * tpad;
+
+    if ((tpad = gst_element_get_compatible_pad (timeline->csp, pad, NULL))) {
+	gst_pad_link (pad, tpad);
+    } else if ((tpad = gst_element_get_compatible_pad (timeline->aconv, pad, NULL))) {
+	gst_pad_link (pad, tpad);
+    }
 }
 
 
@@ -378,7 +421,6 @@ privMoveObject(int source, int dest)
 void Timeline::
 preview()
 {
-  ges_timeline_pipeline_set_mode(pipeline, TIMELINE_MODE_PREVIEW);
   gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
 }
 
