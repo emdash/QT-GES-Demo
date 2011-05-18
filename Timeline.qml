@@ -82,19 +82,20 @@ Item {
 
         Row {
             spacing: 24
-	    id:buttons
-
+	    id:timelineButtons
+	    
             anchors {
                 fill: parent
                 centerIn:parent
                 topMargin: 12
                 rightMargin: 12
                 leftMargin: 12
+		bottomMargin: 12
             }
 
             Button {
                 id:clipButton
-                height: parent.height - 24
+                height: parent.height
                 text: "Add Clip"
 
                 onClicked: {
@@ -104,13 +105,13 @@ Item {
 
             Button {
                 id:titleButton
-                height: parent.height - 24
+                height: parent.height
                 text: "Add Title"
             }
 
             Button {
                 id:transitionButton
-                height: parent.height - 24
+                height: parent.height
                 text: "Add Crossfade"
 
                 onClicked: {
@@ -119,7 +120,6 @@ Item {
 
             Button {
                 id:previewButton
-                height: parent.height - 24
                 text: timeline.model.playing ? "Pause" : "Preview"
 
                 onClicked: {
@@ -134,7 +134,6 @@ Item {
 
 	    Button {
 	       id:stopButton
-	       height: parent.height - 24
 	       text: "Stop"
 	       onClicked: timeline.model.stop()
 	    }
