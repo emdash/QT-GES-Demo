@@ -56,6 +56,8 @@ int main(int argc, char **argv)
       qDebug () << "Media files missing. Download them by running './download.sh'";
       return -1;
   }
+
+  QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
   
   return app.exec();
 }

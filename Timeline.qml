@@ -80,6 +80,7 @@ Item {
 
         Row {
             spacing: 24
+	    id:buttons
 
             anchors {
                 fill: parent
@@ -136,6 +137,19 @@ Item {
 	       onClicked: timeline.model.stop()
 	    }
         }
+
+	Button {
+	   id:quitButton
+	   height: buttons.height - 24
+	   text: "Quit"
+	   onClicked: Qt.quit()
+	   anchors {
+	       rightMargin: 12
+	       top: buttons.top
+	       right: buttons.right
+	   }
+	}
+
         Text {
             id: status
             anchors {
