@@ -121,13 +121,42 @@ Item {
                 }
             }
 
+	    Button {
+	       id:pauseButton
+	       height: parent.height
+	       text: timeline.model.playing ? "Pause" : "Play"
+	       onClicked: {
+	          if (timeline.model.playing) {
+		     timeline.model.pause()
+		  } else {
+		     timeline.model.preview()
+		  }
+	       }
+	       visible: preview.visible
+	    }
+
+        }
+
+	Row {
+	    spacing: 12
+	    
+	    anchors {
+	        rightMargin: 12
+	        topMargin: 12
+	        bottomMargin: 12
+	        top: parent.top
+	        right: parent.right
+		bottom: parent.bottom
+            }
+
             Button {
                 id:previewButton
-                text: timeline.model.playing ? "Pause" : "Preview"
+                text: preview.visible ? "Back" : "Preview"
+		height: parent.height
 
                 onClicked: {
-	           if (timeline.model.playing) {
-		      timeline.model.pause()
+	           if (preview.visible) {
+		      timeline.model.stop()
 		   }
 		   else {
 		     timeline.model.preview();
@@ -136,22 +165,11 @@ Item {
             }
 
 	    Button {
-	       id:stopButton
-	       text: "Stop"
-	       onClicked: timeline.model.stop()
+	       id:quitButton
+	       text: "Quit"
+	       height: parent.height
+	       onClicked: Qt.quit()
 	    }
-        }
-
-	Button {
-	   id:quitButton
-	   height: buttons.height - 24
-	   text: "Quit"
-	   onClicked: Qt.quit()
-	   anchors {
-	       rightMargin: 12
-	       top: buttons.top
-	       right: buttons.right
-	   }
 	}
 
         Text {
