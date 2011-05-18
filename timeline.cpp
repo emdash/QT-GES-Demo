@@ -87,7 +87,6 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   
   pipeline = gst_pipeline_new ("GESTimelinePipeline");
   asnk = gst_element_factory_make ("autoaudiosink", NULL);
-  vsnk = gst_element_factory_make ("autovideosink", NULL);
   vq = gst_element_factory_make ("queue2", NULL);
   aq = gst_element_factory_make ("queue2", NULL);
   aconv = gst_element_factory_make ("audioconvert", NULL);
@@ -97,13 +96,12 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 		   GST_ELEMENT(timeline),
 		   vq,
 		   aq,
-		   vsnk,
 		   asnk,
 		   aconv,
 		   csp,
 		   NULL);
 
-  gst_element_link_many(csp, vq, vsnk, NULL);
+  gst_element_link_many(csp, vq, NULL);
   gst_element_link_many(aconv, aq, asnk, NULL);
   
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
@@ -462,6 +460,11 @@ surface()
 void Timeline::
 setSurface(QmlPainterVideoSurface * surface)
 {
+  if (mSurface) {
+    qDebug () << "WARNING: We already have a surface!";
+  }
   mSurface = surface;
-  // TODO: set the sink surface property
+  vsnk = GST_ELEMENT(QmlVideoSurfaceGstSink::createSink(surface));
+  gst_bin_add(GST_BIN(pipeline), vsnk);
+  gst_element_link (vq, vsnk);
 }
