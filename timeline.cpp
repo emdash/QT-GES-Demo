@@ -21,7 +21,8 @@
 
 enum roles
 {
-  uri,
+  thumb_uri,
+  media_uri,
   duration
 };
 
@@ -125,7 +126,8 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 		   G_CALLBACK(timeline_pad_added_cb), this);
 
   QHash <int, QByteArray> rolenames;
-  rolenames[uri] = "uri";
+  rolenames[thumb_uri] = "thumb_uri";
+  rolenames[media_uri] = "media_uri";
   rolenames[duration] = "duration";
   setRoleNames(rolenames);
   row_count = 0;
@@ -183,6 +185,14 @@ thumbForObject(GESTimelineObject * obj) const
   return thumbs[relative];
 }
 
+static QString mediaUri(GESTimelineObject *obj) {
+  gchar * uri;
+  g_object_get(G_OBJECT(obj), "uri", &uri, NULL);
+  QString quri(uri);
+  g_free (uri);
+  return quri;
+}
+
 
 static QString timeToString(guint64 time)
 {
@@ -206,8 +216,10 @@ data(const QModelIndex &index, int role) const
 
   switch (role)
   {
-    case uri:
+    case thumb_uri:
       return thumbForObject(object);
+    case media_uri:
+      return mediaUri(object);
     case duration:
       return timeToString(GES_TIMELINE_OBJECT_DURATION(object));
     default:

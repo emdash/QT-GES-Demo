@@ -36,7 +36,7 @@ Item {
             top: parent.top
             bottom: durationLabel.top
         }
-        source: uri
+        source: thumb_uri
         sourceSize.width: parent.width 
         fillMode: Image.PreserveAspectFit
     }
