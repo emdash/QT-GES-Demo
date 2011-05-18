@@ -43,6 +43,7 @@ Item {
 
     ReorderableList {
         id:timeline
+	visible: ! (model.playing || model.paused)
         // create an item for each element in a ListModel
         // later the ListModel can be replaced with a proxy for a GESTimeline
 
@@ -59,9 +60,10 @@ Item {
     // Preview
 
     GstVideoItem {
-    	id: preview
+	id: preview
 	surface: timelineSurface;
-	size: Qt.size(320, 240);
+	size: Qt.size(screen.width, screen.height - toolBar.height);
+	visible: timeline.model.playing || timeline.model.paused
     }
 
     // main toolbar
