@@ -32,6 +32,7 @@ class Timeline : public QAbstractListModel {
   Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
+    Q_PROPERTY(bool paused READ paused NOTIFY pausedChanged)
     Q_PROPERTY(QmlPainterVideoSurface * surface READ surface WRITE setSurface)
 
     
@@ -42,6 +43,7 @@ class Timeline : public QAbstractListModel {
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   int count();
   bool playing();
+  bool paused();
   QmlPainterVideoSurface * surface();
   void setSurface (QmlPainterVideoSurface * surface);
   Q_INVOKABLE void appendPath(QString path);
@@ -54,6 +56,7 @@ class Timeline : public QAbstractListModel {
  signals:
   void countChanged(int count);
   void playingChanged(bool isPlaying);
+  void pausedChanged(bool isPaused);
   
  public slots:
 

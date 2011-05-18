@@ -438,10 +438,15 @@ void Timeline::
 privSetState(GstState state)
 {
   bool wasPlaying = playing();
+  bool wasPaused = paused();
   m_state = state;
   if (playing() != wasPlaying)
   {
     emit playingChanged(playing());
+  }
+  if (paused() != wasPaused)
+  {
+    emit pausedChanged(playing());
   }
 }
 
@@ -449,6 +454,12 @@ bool Timeline::
 playing()
 {
   return m_state == GST_STATE_PLAYING;
+}
+
+bool Timeline::
+paused()
+{
+    return m_state == GST_STATE_PAUSED;
 }
 
 QmlPainterVideoSurface * Timeline::
