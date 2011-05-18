@@ -2,7 +2,8 @@ LIBS=gstreamer-0.10\
 	gst-editing-services-0.10\
 	QtCore\
 	QtGui\
-	QtDeclarative
+	QtDeclarative\
+	qt-gst-qml-sink\
 
 SRCS=main.cpp\
 	timeline.cpp\
