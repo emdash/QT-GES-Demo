@@ -19,6 +19,7 @@
 
 import Qt 4.7
 import GES 1.0
+import Gst 1.0
 
 Item {
     id:screen
@@ -46,12 +47,21 @@ Item {
         // later the ListModel can be replaced with a proxy for a GESTimeline
 
         model: GESTimeline {
+	    surface: timelineSurface;
         }
 
         anchors {
             top: screen.top
             bottom: toolBar.top
         }
+    }
+
+    // Preview
+
+    GstVideoItem {
+    	id: preview
+	surface: timelineSurface;
+	size: Qt.size(320, 240);
     }
 
     // main toolbar
