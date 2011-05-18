@@ -41,11 +41,16 @@ int main(int argc, char **argv)
 
   QDeclarativeView view;
   QGLWidget *g = new QGLWidget;
+  
   view.setViewport(g);
   view.setSource(QUrl::fromLocalFile("Timeline.qml"));
   view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
   view.resize(640, 480);
   view.show();
+
+  QmlPainterVideoSurface * timelineSurface = new QmlPainterVideoSurface;
+  timelineSurface->setGLContext((QGLContext *) g->context());
+  view.rootContext()->setContextProperty("timelineSurface", timelineSurface);
 
   if (!QDir::current().exists("media")) {
       qDebug () << "Media files missing. Download them by running './download.sh'";
