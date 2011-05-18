@@ -452,3 +452,16 @@ playing()
 {
   return m_state == GST_STATE_PLAYING;
 }
+
+QmlPainterVideoSurface * Timeline::
+surface()
+{
+    return mSurface;
+}
+
+void Timeline::
+setSurface(QmlPainterVideoSurface * surface)
+{
+  mSurface = surface;
+  // TODO: set the sink surface property
+}

@@ -22,6 +22,8 @@
 
 #include <QObject>
 #include <QtCore>
+#include <QtGstQmlSink/qmlvideosurfacegstsink.h>
+#include <QtGstQmlSink/qmlpaintervideosurface.h>
 
 #define GST_USE_UNSTABLE_API
 #include <ges/ges.h>
@@ -30,6 +32,7 @@ class Timeline : public QAbstractListModel {
   Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
+    Q_PROPERTY(QmlPainterVideoSurface * surface READ surface WRITE setSurface)
 
     
  public:
@@ -39,6 +42,8 @@ class Timeline : public QAbstractListModel {
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   int count();
   bool playing();
+  QmlPainterVideoSurface * surface();
+  void setSurface (QmlPainterVideoSurface * surface);
   Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
   Q_INVOKABLE void remove(int index);
@@ -81,6 +86,7 @@ class Timeline : public QAbstractListModel {
   friend void layer_object_moved_cb (GESTimelineLayer *, GESTimelineObject *, gint, gint, Timeline *);
   friend void layer_object_removed_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
   friend void timeline_object_notify_duration_cb (GESTimelineObject *, GParamSpec *, Timeline *);
+  QmlPainterVideoSurface *mSurface;
 };
 
 #endif
