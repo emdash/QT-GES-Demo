@@ -97,6 +97,7 @@ Item {
                 id:clipButton
                 height: parent.height
                 text: "Add Clip"
+		visible: !preview.visible
 
                 onClicked: {
                     chooser.state = "visible"
@@ -107,12 +108,14 @@ Item {
                 id:titleButton
                 height: parent.height
                 text: "Add Title"
+		visible: !preview.visible
             }
 
             Button {
                 id:transitionButton
                 height: parent.height
                 text: "Add Crossfade"
+		visible: !preview.visible
 
                 onClicked: {
                 }
