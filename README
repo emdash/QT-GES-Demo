@@ -2,13 +2,17 @@ A GES Demo sporting a QT and QML
 
 Compiling:
 
-Make sure you have qt >= 4.7, including qt-declarative.
+Make sure you have qt >= 4.7, including qt-declarative and qt-opengl,
+and the development libraries.
 
-You also need gstreamer, and gst-editing-services installed
-somewhere.
+You also need gstreamer, and gst-editing-services, and
+all related development headers.
 
 You need qt-mobility installed. If it is not in the default prefix (/usr),
 set the QTMOBILITY_ROOT environment variable before running make.
+
+For the moment, you also need the qtgst-qmlsink, and
+qtgst-qmlsink-devel package.
 
 $ make
 
