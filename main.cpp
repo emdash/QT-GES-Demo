@@ -23,7 +23,11 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtDeclarative>
+#include <QtOpenGL/QGLWidget>
 #include "timeline.h"
+
+#include <QtGstQmlSink/qmlvideosurfacegstsink.h>
+#include <QtGstQmlSink/qmlgstvideoitem.h>
 
 int main(int argc, char **argv)
 {
@@ -32,9 +36,15 @@ int main(int argc, char **argv)
   ges_init();
 
   qmlRegisterType<Timeline>("GES", 1, 0, "GESTimeline");
+  qmlRegisterType<QmlGstVideoItem> ("Gst", 1, 0, "GstVideoItem");
+  qmlRegisterType<QmlPainterVideoSurface> ("Gst", 1, 0, "GstVideoSurface");
 
   QDeclarativeView view;
+  QGLWidget *g = new QGLWidget;
+  view.setViewport(g);
   view.setSource(QUrl::fromLocalFile("Timeline.qml"));
+  view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
+  view.resize(640, 480);
   view.show();
 
   if (!QDir::current().exists("media")) {

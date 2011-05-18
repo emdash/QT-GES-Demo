@@ -5,16 +5,25 @@ LIBS=gstreamer-0.10\
 	QtDeclarative\
 	qt-gst-qml-sink\
 
+ifndef QTMOBILITY_ROOT
+QTMOBILITY_ROOT=/usr
+endif
+
+INCPATH= -I$(QTMOBILITY_ROOT)/include/QtMobility \
+	 -I$(QTMOBILITY_ROOT)/include/QtMultimediaKit
+
+LFLAGS= -L$(QTMOBILITY_ROOT)/lib/ -lQtMultimediaKit
+
 SRCS=main.cpp\
 	timeline.cpp\
 	moc_timeline.cpp
 
 HEADERS=timeline.h
 
-CFLAGS=-g `pkg-config --cflags --libs $(LIBS)`
+CFLAGS=-g $(INCPATH) $(LFLAGS) `pkg-config --cflags --libs $(LIBS)`
 
 
-all: $(SRCS) $(HEADERS)
+all: $(SRCS) $(HEADERS) debug
 	gcc $(CFLAGS) $(SRCS) -o ges-demo
 
 moc_%.cpp: %.h
@@ -22,3 +31,6 @@ moc_%.cpp: %.h
 
 check:
 	echo "not implemented"
+
+debug:
+	@echo "QTMOBILITY_ROOT is:" $(QTMOBILITY_ROOT)
