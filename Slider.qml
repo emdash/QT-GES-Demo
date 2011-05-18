@@ -32,36 +32,38 @@ Rectangle {
 	  }
 	  
 	  color: "grey"
-	  height: 25
+	  height: 10
 
 	  Rectangle {
 	  	    anchors {
-		    	    top: parent.top
+		    	top: parent.top
 			    bottom: parent.bottom
 		    }
 		    x: 100
 		    width: 100
-		    color: "lightsteelblue"
-		    		    radius: 5
+		    color: "red"
+		    radius: 5
 
 	  }
 
-	  Rectangle {
+	  Image {
+            source: "images/slider_thumb.png"
 	  	    anchors.top: parent.top
 		    anchors.bottom: parent.bottom
+            anchors.topMargin: -7
+            anchors.bottomMargin: -7
 		    x: position / max_duration * width
-		    width: 1
-		    color: "black"
+            opacity: 0.75
 	  }
 
-    Rectangle {
-    	anchors.fill: parent
-	gradient: Gradient {
-		  GradientStop { position: 0.0; color: "#99FFFFFF" }
-		  GradientStop { position: 0.5; color: "#00FFFFFF" }
-	}
-	border.width: 1
-	border.color: "gray"
+      Rectangle {
+        anchors.fill: parent
+	    gradient: Gradient {
+		        GradientStop { position: 0.0; color: "#99FFFFFF" }
+		        GradientStop { position: 0.5; color: "#00FFFFFF" }
+	    }
+	    border.width: 1
+	    border.color: "gray"
     }
 
 }
