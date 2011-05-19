@@ -145,6 +145,8 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
       "media/thumbnails/mid-Caterpilla_345C_Longfront_01.ogv.jpg";
   thumbs["media/Typing_example.ogv"] = "media/thumbnails/mid-Typing_example.ogv.jpg";
 
+  queryTimer = new QTimer ();
+  connect(queryTimer, SIGNAL(timeout()), this, SLOT(queryPositionDuration()));
 }
 
 
@@ -460,6 +462,15 @@ privSetState(GstState state)
   {
     emit pausedChanged(playing());
   }
+
+  if (playing() && !queryTimer->isActive() ) {
+    queryTimer->start(50);
+  } else if (paused()) {
+    queryTimer->stop();
+    queryPositionDuration();
+  } else {
+    queryTimer->stop();
+  }
 }
 
 bool Timeline::
@@ -490,4 +501,37 @@ setSurface(QmlPainterVideoSurface * surface)
   vsnk = GST_ELEMENT(QmlVideoSurfaceGstSink::createSink(surface));
   gst_bin_add(GST_BIN(pipeline), vsnk);
   gst_element_link (vq, vsnk);
+}
+
+void Timeline ::
+queryPositionDuration()
+{
+  GstFormat format = GST_FORMAT_TIME;
+  gint64 new_duration, new_position;
+
+  if (gst_element_query_duration (pipeline, &format, &new_duration)) {
+    if (((double) new_duration) != mDuration) {
+      mDuration = (double) new_duration;
+      emit durationChanged(mDuration);
+    }
+  }
+  
+  if (gst_element_query_position (pipeline, &format, &new_position)) {
+    if (((double) new_position) != mPosition) {
+      mPosition = (double) new_position;
+      emit positionChanged(mPosition);
+    }
+  }
+}
+
+double Timeline::
+position ()
+{
+  return mPosition;
+}
+
+double Timeline::
+duration ()
+{
+  return mDuration;
 }

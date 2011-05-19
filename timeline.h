@@ -33,6 +33,8 @@ class Timeline : public QAbstractListModel {
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
     Q_PROPERTY(bool paused READ paused NOTIFY pausedChanged)
+    Q_PROPERTY(double position READ position NOTIFY positionChanged)
+    Q_PROPERTY(double duration READ duration NOTIFY durationChanged)
     Q_PROPERTY(QmlPainterVideoSurface * surface READ surface WRITE setSurface)
 
     
@@ -44,6 +46,8 @@ class Timeline : public QAbstractListModel {
   int count();
   bool playing();
   bool paused();
+  double position ();
+  double duration ();
   QmlPainterVideoSurface * surface();
   void setSurface (QmlPainterVideoSurface * surface);
   Q_INVOKABLE void appendPath(QString path);
@@ -57,8 +61,11 @@ class Timeline : public QAbstractListModel {
   void countChanged(int count);
   void playingChanged(bool isPlaying);
   void pausedChanged(bool isPaused);
+  void positionChanged(double position);
+  void durationChanged(double duration);
   
  public slots:
+  void queryPositionDuration();
 
  protected:
   bool canFetchMore(const QModelIndex &parent) const;
@@ -71,6 +78,11 @@ class Timeline : public QAbstractListModel {
   void privMoveObject(gint source, gint dest);
   void privSetState(GstState state);
   QString thumbForObject(GESTimelineObject *) const;
+  
+  QTimer * queryTimer;
+  gint64 mPosition;
+  gint64 mDuration;
+  
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
   GstElement *pipeline;
@@ -81,6 +93,7 @@ class Timeline : public QAbstractListModel {
   GstElement *aconv;
   GstElement *csp;
   GstState m_state;
+  
   int row_count;
   QHash<QString, QString> thumbs;
   friend void bus_message_cb (GstBus *, GstMessage *, Timeline *);
