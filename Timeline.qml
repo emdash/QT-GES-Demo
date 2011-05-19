@@ -85,8 +85,9 @@ Item {
 	    id:timelineButtons
 	    
             anchors {
-                fill: parent
-                centerIn:parent
+                top: parent.top
+		left: parent.left
+		bottom: parent.bottom
                 topMargin: 12
                 rightMargin: 12
                 leftMargin: 12
@@ -137,9 +138,26 @@ Item {
 
         }
 
+	Slider {
+	       anchors {
+	       		top: parent.top
+			bottom: parent.bottom
+			left: timelineButtons.right
+			right: rightButtons.left
+			topMargin: 30
+			bottomMargin: 30
+			rightMargin: 12
+			leftMargin: 12
+	       }
+
+	       visible: preview.visible
+	       max_duration: timeline.model.duration
+	       position: timeline.model.position
+	}
+
 	Row {
 	    spacing: 12
-	    
+	    id: rightButtons
 	    anchors {
 	        rightMargin: 12
 	        topMargin: 12
