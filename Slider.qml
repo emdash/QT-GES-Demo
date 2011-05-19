@@ -21,10 +21,11 @@ import Qt 4.7
 
 Rectangle {
 
-	  property int start: 50
-	  property int duration: 500
-	  property int max_duration: 1000
-	  property int position: joggle.position
+	  property double start: 50
+	  property double duration: 500
+	  property double max_duration: 1000
+	  property double position: 0
+	  property bool edit_points: false
 	  
 	  anchors {
 	  	  right: parent.right
@@ -43,17 +44,16 @@ Rectangle {
 		    width: 100
 		    color: "red"
 		    radius: 5
-
+		    visible: edit_points
 	  }
 
 	  Image {
             source: "images/slider_thumb.png"
-	  	    anchors.top: parent.top
-		    anchors.bottom: parent.bottom
+	    anchors.top: parent.top
+	    anchors.bottom: parent.bottom
             anchors.topMargin: -7
             anchors.bottomMargin: -7
-		    x: position / max_duration * width
-            opacity: 0.75
+            x: ((position / max_duration) * parent.width) - (width / 2)
 	  }
 
       Rectangle {
