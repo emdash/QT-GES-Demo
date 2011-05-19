@@ -153,6 +153,16 @@ Item {
 	       visible: preview.visible
 	       max_duration: timeline.model.duration
 	       position: timeline.model.position
+
+	       MouseArea {
+		    anchors.fill: parent
+		    onPositionChanged: {
+		       timeline.model.seek(
+				Math.max(0,
+				     Math.min(parent.max_duration,
+					      (mouse.x / width) * parent.max_duration)))
+		    }
+	       }
 	}
 
 	Row {
