@@ -146,7 +146,10 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   thumbs["media/Typing_example.ogv"] = "media/thumbnails/mid-Typing_example.ogv.jpg";
 
   queryTimer = new QTimer ();
+  seekTimer = new QTimer ();
+  lastSeek = new QElapsedTimer ();
   connect(queryTimer, SIGNAL(timeout()), this, SLOT(queryPositionDuration()));
+  connect(seekTimer, SIGNAL(timeout()), this, SLOT(seekToPosition()));
 }
 
 
@@ -446,6 +449,41 @@ void Timeline::
 stop()
 {
   gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_READY);
+}
+
+void Timeline::
+seek(double position)
+{
+  if (!seekTimer->isActive()) {
+    seekTimer->start (80);
+  }
+
+  if (playing()) {
+    pause();
+  }
+  
+  mSeekRequest = (gint64) position;
+  lastSeek->start();
+}
+
+void Timeline::
+seekToPosition()
+{
+  if (gst_element_seek(GST_ELEMENT(pipeline),
+		       1.0,
+		       GST_FORMAT_TIME,
+		       GST_SEEK_FLAG_FLUSH,
+		       GST_SEEK_TYPE_SET,
+		       (gint64) mSeekRequest,
+		       GST_SEEK_TYPE_NONE,
+		       GST_CLOCK_TIME_NONE)) {
+    
+    queryPositionDuration();
+  }
+  
+  if (lastSeek->hasExpired(250)) {
+    seekTimer->stop();
+  }
 }
 
 void Timeline::

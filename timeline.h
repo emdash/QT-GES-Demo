@@ -56,6 +56,7 @@ class Timeline : public QAbstractListModel {
   Q_INVOKABLE void preview();
   Q_INVOKABLE void pause();
   Q_INVOKABLE void stop();
+  Q_INVOKABLE void seek(double position);
 
  signals:
   void countChanged(int count);
@@ -66,6 +67,7 @@ class Timeline : public QAbstractListModel {
   
  public slots:
   void queryPositionDuration();
+  void seekToPosition();
 
  protected:
   bool canFetchMore(const QModelIndex &parent) const;
@@ -80,8 +82,11 @@ class Timeline : public QAbstractListModel {
   QString thumbForObject(GESTimelineObject *) const;
   
   QTimer * queryTimer;
+  QTimer * seekTimer;
+  QElapsedTimer * lastSeek;
   gint64 mPosition;
   gint64 mDuration;
+  gint64 mSeekRequest;
   
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
