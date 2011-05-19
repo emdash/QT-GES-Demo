@@ -24,6 +24,7 @@
 #include <QtCore>
 #include <QtGstQmlSink/qmlvideosurfacegstsink.h>
 #include <QtGstQmlSink/qmlpaintervideosurface.h>
+#include "pipeline.h"
 
 #define GST_USE_UNSTABLE_API
 #include <ges/ges.h>
@@ -31,12 +32,7 @@
 class Timeline : public QAbstractListModel {
   Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
-    Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
-    Q_PROPERTY(bool paused READ paused NOTIFY pausedChanged)
-    Q_PROPERTY(double position READ position NOTIFY positionChanged)
-    Q_PROPERTY(double duration READ duration NOTIFY durationChanged)
-    Q_PROPERTY(QmlPainterVideoSurface * surface READ surface WRITE setSurface)
-
+    Q_PROPERTY(Pipeline * pipeline READ pipeline WRITE setPipeline)
     
  public:
   Timeline(QObject *parent = 0);
@@ -44,31 +40,17 @@ class Timeline : public QAbstractListModel {
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   int count();
-  bool playing();
-  bool paused();
-  double position ();
-  double duration ();
-  QmlPainterVideoSurface * surface();
-  void setSurface (QmlPainterVideoSurface * surface);
+  Pipeline * pipeline ();
+  void setPipeline (Pipeline * pipeline);
+  GstElement * source ();
+  
   Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
   Q_INVOKABLE void remove(int index);
-  Q_INVOKABLE void preview();
-  Q_INVOKABLE void pause();
-  Q_INVOKABLE void stop();
-  Q_INVOKABLE void seek(double position);
 
  signals:
   void countChanged(int count);
-  void playingChanged(bool isPlaying);
-  void pausedChanged(bool isPaused);
-  void positionChanged(double position);
-  void durationChanged(double duration);
   
- public slots:
-  void queryPositionDuration();
-  void seekToPosition();
-
  protected:
   bool canFetchMore(const QModelIndex &parent) const;
   void fetchMore(const QModelIndex &parent);
@@ -78,36 +60,18 @@ class Timeline : public QAbstractListModel {
   void privDurationChanged(GESTimelineObject *);
   void privRemoveObject(GESTimelineObject *);
   void privMoveObject(gint source, gint dest);
-  void privSetState(GstState state);
   QString thumbForObject(GESTimelineObject *) const;
-  
-  QTimer * queryTimer;
-  QTimer * seekTimer;
-  QElapsedTimer * lastSeek;
-  gint64 mPosition;
-  gint64 mDuration;
-  gint64 mSeekRequest;
-  
+
+  Pipeline *mPipeline;
   GESTimeline *timeline;
   GESSimpleTimelineLayer *layer;
-  GstElement *pipeline;
-  GstElement *vq;
-  GstElement *aq;
-  GstElement *vsnk;
-  GstElement *asnk;
-  GstElement *aconv;
-  GstElement *csp;
-  GstState m_state;
   
   int row_count;
   QHash<QString, QString> thumbs;
-  friend void bus_message_cb (GstBus *, GstMessage *, Timeline *);
-  friend void timeline_pad_added_cb (GESTimeline *, GstPad *, Timeline *);
   friend void layer_object_added_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
   friend void layer_object_moved_cb (GESTimelineLayer *, GESTimelineObject *, gint, gint, Timeline *);
   friend void layer_object_removed_cb (GESTimelineLayer *, GESTimelineObject *, Timeline *);
   friend void timeline_object_notify_duration_cb (GESTimelineObject *, GParamSpec *, Timeline *);
-  QmlPainterVideoSurface *mSurface;
 };
 
 #endif

@@ -28,10 +28,6 @@ enum roles
 
 /* declarations for C friend functions which handle GLib signals */
 
-void timeline_pad_added_cb(GESTimeline *,
-			   GstPad *pad,
-			   Timeline *);
-
 void layer_object_added_cb(GESTimelineLayer *,
   GESTimelineObject *,
   Timeline *);
@@ -50,34 +46,6 @@ void timeline_object_notify_duration_cb(GESTimelineObject *,
   GParamSpec *,
   Timeline *);
 
-/* bus message handler so we can track things like EOS and state changes */
-
-void
-bus_message_cb (GstBus * bus, GstMessage * message, Timeline * timeline)
-{
-  const GstStructure *s;
-  s = gst_message_get_structure (message);
-
-  switch (GST_MESSAGE_TYPE (message)) {
-  case GST_MESSAGE_ERROR:
-    g_print ("ERROR\n");
-    break;
-  case GST_MESSAGE_EOS:
-    timeline->stop();
-    break;
-  case GST_MESSAGE_STATE_CHANGED:
-    if (s && GST_MESSAGE_SRC (message) == GST_OBJECT_CAST (timeline->pipeline)) {
-      GstState old, new_, pending;
-      gst_message_parse_state_changed (message, &old, &new_, &pending);
-      timeline->privSetState(new_);
-    }
-    break;
-  default:
-    break;
-  }
-}
-
-
 /* class constructor */
 
 Timeline::
@@ -85,35 +53,7 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 {
   timeline = ges_timeline_new_audio_video();
   layer = ges_simple_timeline_layer_new();
-  
-  pipeline = gst_pipeline_new ("GESTimelinePipeline");
-  asnk = gst_element_factory_make ("autoaudiosink", NULL);
-  vq = gst_element_factory_make ("queue2", NULL);
-  aq = gst_element_factory_make ("queue2", NULL);
-  aconv = gst_element_factory_make ("audioconvert", NULL);
-  csp = gst_element_factory_make ("ffmpegcolorspace", NULL);
-
-  gst_bin_add_many(GST_BIN(pipeline),
-		   GST_ELEMENT(timeline),
-		   vq,
-		   aq,
-		   asnk,
-		   aconv,
-		   csp,
-		   NULL);
-
-  gst_element_link_many(csp, vq, NULL);
-  gst_element_link_many(aconv, aq, asnk, NULL);
-  
   ges_timeline_add_layer(timeline, GES_TIMELINE_LAYER(layer));
-
-  GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
-  gst_bus_add_signal_watch(bus);
-
-  m_state = GST_STATE_NULL;
-
-  g_signal_connect(G_OBJECT(bus), "message",
-    G_CALLBACK(bus_message_cb), this);
 
   g_signal_connect(G_OBJECT(layer), "object-added",
     G_CALLBACK(layer_object_added_cb), this);
@@ -121,9 +61,6 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
     G_CALLBACK(layer_object_moved_cb), this);
   g_signal_connect(G_OBJECT(layer), "object-removed",
     G_CALLBACK(layer_object_removed_cb), this);
-
-  g_signal_connect(G_OBJECT(timeline), "pad-added",
-		   G_CALLBACK(timeline_pad_added_cb), this);
 
   QHash <int, QByteArray> rolenames;
   rolenames[thumb_uri_role] = "thumb_uri";
@@ -144,22 +81,10 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   thumbs["media/Caterpilla_345C_Longfront_01.ogv"] =
       "media/thumbnails/mid-Caterpilla_345C_Longfront_01.ogv.jpg";
   thumbs["media/Typing_example.ogv"] = "media/thumbnails/mid-Typing_example.ogv.jpg";
-
-  queryTimer = new QTimer ();
-  seekTimer = new QTimer ();
-  lastSeek = new QElapsedTimer ();
-  connect(queryTimer, SIGNAL(timeout()), this, SLOT(queryPositionDuration()));
-  connect(seekTimer, SIGNAL(timeout()), this, SLOT(seekToPosition()));
 }
-
 
 Timeline::~Timeline()
 {
-  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
-  // FIXME: why does this call throw std::bad_alloc?
-  // gst_object_unref(GST_OBJECT(pipeline));
-  pipeline = 0;
-  timeline = 0;
 }
 
 /* functions and methods implementing the QAbstractListModel
@@ -171,12 +96,10 @@ rowCount(const QModelIndex &parent) const
   return row_count;
 }
 
-
 int Timeline::count()
 {
   return row_count;
 }
-
 
 QString Timeline::
 thumbForObject(GESTimelineObject * obj) const
@@ -198,7 +121,6 @@ static QString mediaUri(GESTimelineObject *obj) {
   return quri;
 }
 
-
 static QString timeToString(guint64 time)
 {
   gchar buffer[30];
@@ -206,7 +128,6 @@ static QString timeToString(guint64 time)
     GST_TIME_ARGS(time));
   return QString(buffer);
 }
-
 
 QVariant Timeline::
 data(const QModelIndex &index, int role) const
@@ -231,7 +152,6 @@ data(const QModelIndex &index, int role) const
       return QVariant::fromValue(QString("Invalid role " + role));
   };
 }
-
 
 void
 timeline_object_notify_duration_cb(GESTimelineObject *obj,
@@ -270,23 +190,6 @@ void
 Timeline::fetchMore(const QModelIndex &parent)
 {
 }
-
-/* connect pads to the output sinks */
-
-void
-timeline_pad_added_cb (GESTimeline * gestimeline,
-		       GstPad * pad,
-		       Timeline * timeline)
-{
-    GstPad * tpad;
-
-    if ((tpad = gst_element_get_compatible_pad (timeline->csp, pad, NULL))) {
-	gst_pad_link (pad, tpad);
-    } else if ((tpad = gst_element_get_compatible_pad (timeline->aconv, pad, NULL))) {
-	gst_pad_link (pad, tpad);
-    }
-}
-
 
 /* functions and methods related to adding sources to the timeline */
 
@@ -431,145 +334,15 @@ privMoveObject(int source, int dest)
   endMoveRows();
 }
 
-/* playback state funtions and methods */
-
 void Timeline::
-preview()
+setPipeline (Pipeline * pipeline)
 {
-  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+    mPipeline = pipeline;
+    pipeline->setSource (GST_ELEMENT(timeline));
 }
 
-void Timeline::
-pause()
+Pipeline * Timeline::
+pipeline ()
 {
-  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PAUSED);
-}
-
-void Timeline::
-stop()
-{
-  gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_READY);
-}
-
-void Timeline::
-seek(double position)
-{
-  if (!seekTimer->isActive()) {
-    seekTimer->start (80);
-  }
-
-  if (playing()) {
-    pause();
-  }
-  
-  mSeekRequest = (gint64) position;
-  lastSeek->start();
-}
-
-void Timeline::
-seekToPosition()
-{
-  if (gst_element_seek(GST_ELEMENT(pipeline),
-		       1.0,
-		       GST_FORMAT_TIME,
-		       (GstSeekFlags)(GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_FLUSH),
-		       GST_SEEK_TYPE_SET,
-		       (gint64) mSeekRequest,
-		       GST_SEEK_TYPE_NONE,
-		       GST_CLOCK_TIME_NONE)) {
-    
-    queryPositionDuration();
-  }
-  
-  if (lastSeek->hasExpired(250)) {
-    seekTimer->stop();
-  }
-}
-
-void Timeline::
-privSetState(GstState state)
-{
-  bool wasPlaying = playing();
-  bool wasPaused = paused();
-  m_state = state;
-  if (playing() != wasPlaying)
-  {
-    emit playingChanged(playing());
-  }
-  if (paused() != wasPaused)
-  {
-    emit pausedChanged(playing());
-  }
-
-  if (playing() && !queryTimer->isActive() ) {
-    queryTimer->start(50);
-  } else if (paused()) {
-    queryTimer->stop();
-    queryPositionDuration();
-  } else {
-    queryTimer->stop();
-  }
-}
-
-bool Timeline::
-playing()
-{
-  return m_state == GST_STATE_PLAYING;
-}
-
-bool Timeline::
-paused()
-{
-    return m_state == GST_STATE_PAUSED;
-}
-
-QmlPainterVideoSurface * Timeline::
-surface()
-{
-    return mSurface;
-}
-
-void Timeline::
-setSurface(QmlPainterVideoSurface * surface)
-{
-  if (mSurface) {
-    qDebug () << "WARNING: We already have a surface!";
-  }
-  mSurface = surface;
-  vsnk = GST_ELEMENT(QmlVideoSurfaceGstSink::createSink(surface));
-  gst_bin_add(GST_BIN(pipeline), vsnk);
-  gst_element_link (vq, vsnk);
-}
-
-void Timeline ::
-queryPositionDuration()
-{
-  GstFormat format = GST_FORMAT_TIME;
-  gint64 new_duration, new_position;
-
-  if (gst_element_query_duration (pipeline, &format, &new_duration)) {
-    if (((double) new_duration) != mDuration) {
-      mDuration = (double) new_duration;
-      emit durationChanged(mDuration);
-    }
-  }
-  
-  if (gst_element_query_position (pipeline, &format, &new_position)) {
-    if (((double) new_position) != mPosition) {
-      mPosition = (double) new_position;
-      emit positionChanged(mPosition);
-    }
-  }
-}
-
-double Timeline::
-position ()
-{
-  return mPosition;
-}
-
-double Timeline::
-duration ()
-{
-  return mDuration;
+    return mPipeline;
 }

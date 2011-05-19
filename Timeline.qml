@@ -39,16 +39,23 @@ Item {
         color: "black"
     }
 
+    // timelinePipeline
+
+    GESTimelinePipeline {
+    	id:timelinePipeline
+	surface: timelineSurface;
+    }
+
     // the timeline
 
     ReorderableList {
         id:timeline
-	visible: ! (model.playing || model.paused)
+	visible: ! (timelinePipeline.playing || timelinePipeline.paused)
         // create an item for each element in a ListModel
         // later the ListModel can be replaced with a proxy for a GESTimeline
 
         model: GESTimeline {
-	    surface: timelineSurface;
+	       pipeline: timelinePipeline;
         }
 
         anchors {
@@ -56,14 +63,14 @@ Item {
             bottom: toolBar.top
         }
     }
-
+    
     // Preview
 
     GstVideoItem {
 	id: preview
 	surface: timelineSurface;
 	size: Qt.size(screen.width, screen.height - toolBar.height);
-	visible: timeline.model.playing || timeline.model.paused
+	visible: timelinePipeline.playing || timelinePipeline.paused
     }
 
     // main toolbar
@@ -125,12 +132,12 @@ Item {
 	    Button {
 	       id:pauseButton
 	       height: parent.height
-	       text: timeline.model.playing ? "Pause" : "Play"
+	       text: timelinePipeline.playing ? "Pause" : "Play"
 	       onClicked: {
-	          if (timeline.model.playing) {
-		     timeline.model.pause()
+	          if (timelinePipeline.playing) {
+		     timelinePipeline.pause()
 		  } else {
-		     timeline.model.preview()
+		     timelinePipeline.preview()
 		  }
 	       }
 	       visible: preview.visible
@@ -151,13 +158,13 @@ Item {
 	       }
 
 	       visible: preview.visible
-	       max_duration: timeline.model.duration
-	       position: timeline.model.position
+	       max_duration: timelinePipeline.duration
+	       position: timelinePipeline.position
 
 	       MouseArea {
 		    anchors.fill: parent
 		    onPositionChanged: {
-		       timeline.model.seek(
+		       timelinePipeline.seek(
 				Math.max(0,
 				     Math.min(parent.max_duration,
 					      (mouse.x / width) * parent.max_duration)))
@@ -184,10 +191,10 @@ Item {
 
                 onClicked: {
 	           if (preview.visible) {
-		      timeline.model.stop()
+		      timelinePipeline.stop()
 		   }
 		   else {
-		     timeline.model.preview();
+		      timelinePipeline.preview();
 		   }
                 }
             }

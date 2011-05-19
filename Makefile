@@ -16,9 +16,12 @@ LFLAGS= -L$(QTMOBILITY_ROOT)/lib/ -lQtMultimediaKit
 
 SRCS=main.cpp\
 	timeline.cpp\
-	moc_timeline.cpp
+	moc_timeline.cpp\
+	pipeline.cpp\
+	moc_pipeline.cpp
 
-HEADERS=timeline.h
+HEADERS=timeline.h\
+	pipeline.h
 
 CFLAGS=-g $(INCPATH) $(LFLAGS) `pkg-config --cflags --libs $(LIBS)`
 

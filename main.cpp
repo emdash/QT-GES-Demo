@@ -36,6 +36,7 @@ int main(int argc, char **argv)
   ges_init();
 
   qmlRegisterType<Timeline>("GES", 1, 0, "GESTimeline");
+  qmlRegisterType<Pipeline>("GES", 1, 0, "GESTimelinePipeline");
   qmlRegisterType<QmlGstVideoItem> ("Gst", 1, 0, "GstVideoItem");
   qmlRegisterType<QmlPainterVideoSurface> ("Gst", 1, 0, "GstVideoSurface");
 
@@ -43,14 +44,15 @@ int main(int argc, char **argv)
   QGLWidget *g = new QGLWidget;
   
   view.setViewport(g);
-  view.setSource(QUrl::fromLocalFile("Timeline.qml"));
-  view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
-  view.resize(640, 480);
-  view.show();
 
   QmlPainterVideoSurface * timelineSurface = new QmlPainterVideoSurface;
   timelineSurface->setGLContext((QGLContext *) g->context());
   view.rootContext()->setContextProperty("timelineSurface", timelineSurface);
+
+  view.setSource(QUrl::fromLocalFile("Timeline.qml"));
+  view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
+  view.resize(640, 480);
+  view.show();
 
   if (!QDir::current().exists("media")) {
       qDebug () << "Media files missing. Download them by running './download.sh'";
