@@ -21,9 +21,9 @@
 
 enum roles
 {
-  thumb_uri,
-  media_uri,
-  duration
+  thumb_uri_role,
+  media_uri_role,
+  duration_role,
 };
 
 /* declarations for C friend functions which handle GLib signals */
@@ -126,9 +126,9 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
 		   G_CALLBACK(timeline_pad_added_cb), this);
 
   QHash <int, QByteArray> rolenames;
-  rolenames[thumb_uri] = "thumb_uri";
-  rolenames[media_uri] = "media_uri";
-  rolenames[duration] = "duration";
+  rolenames[thumb_uri_role] = "thumb_uri";
+  rolenames[media_uri_role] = "media_uri";
+  rolenames[duration_role] = "duration";
   setRoleNames(rolenames);
   row_count = 0;
 
@@ -216,11 +216,11 @@ data(const QModelIndex &index, int role) const
 
   switch (role)
   {
-    case thumb_uri:
+    case thumb_uri_role:
       return thumbForObject(object);
-    case media_uri:
+    case media_uri_role:
       return mediaUri(object);
-    case duration:
+    case duration_role:
       return timeToString(GES_TIMELINE_OBJECT_DURATION(object));
     default:
       return QVariant::fromValue(QString("Invalid role " + role));
