@@ -472,7 +472,7 @@ seekToPosition()
   if (gst_element_seek(GST_ELEMENT(pipeline),
 		       1.0,
 		       GST_FORMAT_TIME,
-		       GST_SEEK_FLAG_FLUSH,
+		       (GstSeekFlags)(GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_FLUSH),
 		       GST_SEEK_TYPE_SET,
 		       (gint64) mSeekRequest,
 		       GST_SEEK_TYPE_NONE,
