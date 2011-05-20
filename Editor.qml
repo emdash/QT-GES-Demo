@@ -47,6 +47,8 @@ Item {
          editor.visible = false
          timeline.model.setInPoint (curindex, inPointPipeline.position)
 	 timeline.model.setOutPoint (curindex, outPointPipeline.position)
+	 inPointPipeline.stop()
+	 outPointPipeline.stop()
      }
      
      GESTimelinePipeline {
