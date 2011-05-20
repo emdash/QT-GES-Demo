@@ -69,7 +69,7 @@ Item {
 	id: preview
 	surface: timelineSurface;
 	size: Qt.size(screen.width, screen.height - toolBar.height);
-	visible: timelinePipeline.playing || timelinePipeline.paused
+	visible: false
     }
 
     // Editor for trimming clips
@@ -162,7 +162,7 @@ Item {
 	       visible: !warning.visible
 
 	       onClicked: {
-		    editor.visible = false
+	            editor.done ()
 		    timeline.visible = true
 	       }
 	    }
@@ -215,10 +215,12 @@ Item {
 	           if (preview.visible) {
 		      timelinePipeline.stop()
 		      timeline.visible = true
+		      preview.visible = false
 		   }
 		   else {
 		      timelinePipeline.preview();
 		      timeline.visible = false
+		      preview.visible = true
 		   }
                 }
             }

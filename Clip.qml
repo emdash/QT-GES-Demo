@@ -43,7 +43,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                editor.edit (media_uri)
+                editor.edit (index, media_uri)
             }
         }
     }

@@ -23,12 +23,13 @@ import Gst 1.0
 
 Item {
      id:root
-     property string uri
      property alias inPoint: inPointPipeline.position
      property alias outPoint: outPointPipeline.position
      visible: false
+     property int curindex;
 
-     function edit (uri) {
+     function edit (index, uri) {
+         curindex = index
          inPointPipeline.setUri (uri)
 	 inPointPipeline.pause()
 	 outPointPipeline.setUri (uri)
@@ -36,6 +37,12 @@ Item {
 	 outPointPipeline.seek (outPointPipeline.duration)
 	 timeline.visible = false
 	 visible = true
+     }
+
+     function done () {
+         editor.visible = false
+         timeline.model.setInPoint (curindex, inPointPipeline.position)
+	 timeline.model.setOutPoint (curindex, outPointPipeline.position)
      }
      
      GESTimelinePipeline {

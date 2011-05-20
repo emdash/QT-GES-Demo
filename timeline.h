@@ -47,6 +47,8 @@ class Timeline : public QAbstractListModel {
   Q_INVOKABLE void appendPath(QString path);
   Q_INVOKABLE void move(int source, int dest, int n);
   Q_INVOKABLE void remove(int index);
+  Q_INVOKABLE void setInPoint(int index, double inPoint);
+  Q_INVOKABLE void setOutPoint(int index, double outPoint);
 
  signals:
   void countChanged(int count);

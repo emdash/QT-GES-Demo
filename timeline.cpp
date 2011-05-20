@@ -279,6 +279,60 @@ remove(int index)
   ges_timeline_layer_remove_object(GES_TIMELINE_LAYER(layer), obj);
 }
 
+void Timeline::
+setInPoint(int index, double pos)
+{
+  
+  GESTimelineObject * obj;
+
+  if (!(obj = ges_simple_timeline_layer_nth (layer, index))) {
+    return;
+  }
+
+  guint64 curInPoint, curOutPoint, curDuration;
+  guint64 newInPoint, newOutPoint, newDuration;
+
+  g_object_get (G_OBJECT(obj),
+		"duration", (guint64 *) &curDuration,
+		"in-point", (guint64 *) &curInPoint, NULL);
+
+  curOutPoint = curDuration + curInPoint;
+  newInPoint = (guint64) pos;
+  newOutPoint = curOutPoint;
+  newDuration = newOutPoint - newInPoint;
+
+  g_object_set (G_OBJECT(obj),
+		"duration", (guint64) newDuration,
+		"in-point", (guint64) newInPoint, NULL);
+}
+
+void Timeline::
+setOutPoint(int index, double pos)
+{
+  GESTimelineObject * obj;
+
+  if (!(obj = ges_simple_timeline_layer_nth (layer, index))) {
+    return;
+  }
+
+  guint64 curInPoint, curOutPoint, curDuration;
+  guint64 newInPoint, newOutPoint, newDuration;
+
+  g_object_get (G_OBJECT(obj),
+		"duration", (guint64 *) &curDuration,
+		"in-point", (guint64 *) &curInPoint, NULL);
+
+  curOutPoint = curDuration + curInPoint;
+  newInPoint = curInPoint;
+  newOutPoint = (guint64) pos;
+  newDuration = newOutPoint - newInPoint;
+
+  g_object_set (G_OBJECT(obj),
+		"duration", (guint64) newDuration,
+		"in-point", (guint64) newInPoint, NULL);
+
+}
+
 /* functions and methods related to re-ordering the timeline */
 
 static void swap(int &a, int &b)
