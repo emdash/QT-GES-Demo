@@ -25,9 +25,10 @@ Item {
      id:root
      visible: false
      property int curindex;
-     property double inPoint
-     property double outPoint
-     property bool durationOnly
+     property alias inPoint: viewer.inPoint
+     property alias outPoint: viewer.outPoint
+     property double duration: outPoint - inPoint
+     property alias durationOnly: viewer.durationOnly
 
      function edit (index, uri, in_point, out_point, duration_only) {
          curindex = index
@@ -77,19 +78,17 @@ Item {
      }
 
      MediaViewer {
+         id: viewer
          anchors {
 	     left: parent.left
+	     right: parent.right
 	     top: parent.top
 	     bottom: parent.bottom
 	 }
 	 
 	 text: "Viewer"
-	 width: (parent.width / 2) - 12
          surface: editorSurface
 	 pipeline: editorPipeline
-	 inPoint: parent.inPoint
-	 outPoint: parent.outPoint
 	 showEditPoints: true
-	 durationOnly: parent.durationOnly
      }
 }
