@@ -236,6 +236,13 @@ Item {
 		bottom: parent.bottom
             }
 
+	    Text {
+	       text: "Duration: " + timeline.model.timeToString(editor.duration)
+	       height: parent.height
+	       verticalAlignment: Text.AlignVCenter
+	       visible: editor.visible && !warning.visible
+	    }
+
             Button {
                 id:previewButton
                 text: preview.visible ? "Back" : "Preview"
