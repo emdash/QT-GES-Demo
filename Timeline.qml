@@ -143,6 +143,33 @@ Item {
 
         }
 
+	Row {
+	    id: editorControls
+	    visible: editor.visible
+	    
+            anchors {
+                top: parent.top
+		left: parent.left
+		bottom: parent.bottom
+                topMargin: 12
+                rightMargin: 12
+                leftMargin: 12
+		bottomMargin: 12
+            }
+
+	    Button {
+	       text: "Done"
+	       height: parent.height
+
+	       onClicked: {
+		    editor.visible = false
+		    timeline.visible = true
+	       }
+	    }
+
+	    spacing: 24
+	}
+
 	MediaControls {
 	    visible: preview.visible
 	    anchors {

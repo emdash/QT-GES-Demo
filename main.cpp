@@ -57,7 +57,8 @@ int main(int argc, char **argv)
   view.setViewport(g);
 
   createGLSurface("timelineSurface", &view);
-  createGLSurface("editorSurface", &view);
+  createGLSurface("inPointSurface", &view);
+  createGLSurface("outPointSurface", &view);
 
   view.setSource(QUrl::fromLocalFile("Timeline.qml"));
   view.setResizeMode(QDeclarativeView::SizeRootObjectToView);

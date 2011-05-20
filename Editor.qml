@@ -27,20 +27,48 @@ Item {
      visible: false
 
      function edit (uri) {
-         editorPipeline.setUri (uri)
-	 editorPipeline.pause()
+         inPointPipeline.setUri (uri)
+	 inPointPipeline.pause()
+	 outPointPipeline.setUri (uri)
+	 outPointPipeline.pause ()
 	 visible = true
 	 timeline.visible = false
      }
      
      GESTimelinePipeline {
-         id: editorPipeline
-	 surface: editorSurface
+         id: inPointPipeline
+	 surface: inPointSurface
      }
-     
+
+     GESTimelinePipeline {
+        id: outPointPipeline
+	surface: outPointSurface
+     }
+
      MediaViewer {
-         surface: editorSurface
-	 pipeline: editorPipeline
-	 anchors.fill: parent
+         anchors {
+	     left: parent.left
+	     top: parent.top
+	     bottom: parent.bottom
+	 }
+	 
+	 text: "In Point"
+	 width: (parent.width / 2) - 12
+         surface: inPointSurface
+	 pipeline: inPointPipeline
      }
+
+     MediaViewer {
+         anchors {
+	     right: parent.right
+	     top: parent.top
+	     bottom: parent.bottom
+	 }
+
+	 text: "Out Point"
+	 width: (parent.width / 2) - 12
+         surface: outPointSurface
+	 pipeline: outPointPipeline
+     }
+
 }
