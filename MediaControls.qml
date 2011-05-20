@@ -31,6 +31,12 @@ Item {
        }
     }
 
+    function seek (pos) {
+	pipeline.seek(
+		Math.max(0,
+		     Math.min(pipeline.duration, pos)))
+    }
+
     Slider {
            id: slider
 	   anchors {
@@ -49,14 +55,27 @@ Item {
 
 	   MouseArea {
 		anchors.fill: parent
-		onPositionChanged: {
-		   pipeline.seek(
-			    Math.max(0,
-				 Math.min(parent.max_duration,
-					  (mouse.x / width) * parent.max_duration)))
-		}
+		onPositionChanged: { seek((mouse.x / width) * pipeline.duration) }
 	   }
     }
 
+    Joggle {
+         id: joggle
 
+	 anchors {
+	     top: parent.top
+	     bottom: parent.bottom
+	     right: parent.right
+	     left: parent.left
+	 }
+
+	 visible: durationOnly
+	 position: outPoint / 10000000
+	 
+	 onPositionChanged: {
+	     if (durationOnly) {
+	          outPoint = position * 10000000
+	     }
+	 }
+    }
 }
