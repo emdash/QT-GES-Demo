@@ -78,7 +78,7 @@ Item {
 	     bottom: parent.bottom
 	 }
 	 
-	 text: "In Point"
+	 text: "Viewer"
 	 width: (parent.width / 2) - 12
          surface: editorSurface
 	 pipeline: editorPipeline
