@@ -24,6 +24,9 @@ enum roles
   thumb_uri_role,
   media_uri_role,
   duration_role,
+  inpoint_role,
+  outpoint_role,
+  duration_only_role,
 };
 
 /* declarations for C friend functions which handle GLib signals */
@@ -65,7 +68,10 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   QHash <int, QByteArray> rolenames;
   rolenames[thumb_uri_role] = "thumb_uri";
   rolenames[media_uri_role] = "media_uri";
+  rolenames[inpoint_role] = "in_point";
+  rolenames[outpoint_role] = "out_point";
   rolenames[duration_role] = "duration";
+  rolenames[duration_only_role] = "duration_only";
   setRoleNames(rolenames);
   row_count = 0;
 
@@ -148,6 +154,17 @@ data(const QModelIndex &index, int role) const
       return mediaUri(object);
     case duration_role:
       return timeToString(GES_TIMELINE_OBJECT_DURATION(object));
+    case inpoint_role:
+      return QVariant::fromValue((double) GES_TIMELINE_OBJECT_INPOINT(object));
+    case outpoint_role:
+      return QVariant::fromValue((double) GES_TIMELINE_OBJECT_INPOINT(object) +
+				 GES_TIMELINE_OBJECT_DURATION(object));
+    case duration_only_role:
+      gboolean is_image;
+      g_object_get (G_OBJECT(object),
+		    "is-image", (gboolean *) &is_image, NULL);
+      return QVariant::fromValue((bool) is_image);
+      
     default:
       return QVariant::fromValue(QString("Invalid role " + role));
   };
