@@ -131,12 +131,14 @@ Item {
                 id:titleButton
                 height: parent.height
                 text: "Add Title"
+		visible: false
             }
 
             Button {
                 id:transitionButton
                 height: parent.height
                 text: "Add Crossfade"
+		visible: false
 
                 onClicked: {
                 }
