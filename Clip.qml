@@ -59,7 +59,7 @@ Item {
 
     Text {
         id: durationLabel
-        text: duration
+        text: timeline.model.timeToString(duration)
         height: 25
         color: "white"
         anchors.bottom: parent.bottom

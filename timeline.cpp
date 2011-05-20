@@ -155,7 +155,7 @@ data(const QModelIndex &index, int role) const
     case media_uri_role:
       return mediaUri(object);
     case duration_role:
-      return timeToString(GES_TIMELINE_OBJECT_DURATION(object));
+      return QVariant::fromValue((double) GES_TIMELINE_OBJECT_DURATION(object));
     case inpoint_role:
       return QVariant::fromValue((double) GES_TIMELINE_OBJECT_INPOINT(object));
     case outpoint_role:
