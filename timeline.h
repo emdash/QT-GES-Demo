@@ -49,6 +49,7 @@ class Timeline : public QAbstractListModel {
   Q_INVOKABLE void remove(int index);
   Q_INVOKABLE void setInPoint(int index, double inPoint);
   Q_INVOKABLE void setOutPoint(int index, double outPoint);
+  Q_INVOKABLE QString timeToString(double time);
 
  signals:
   void countChanged(int count);

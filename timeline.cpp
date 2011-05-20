@@ -127,8 +127,10 @@ static QString mediaUri(GESTimelineObject *obj) {
   return quri;
 }
 
-static QString timeToString(guint64 time)
+QString Timeline::
+timeToString(double dTime)
 {
+  guint64 time = (guint64) dTime;
   gchar buffer[30];
   g_snprintf(buffer, sizeof(buffer), "%u:%02u:%02u.%09u",
     GST_TIME_ARGS(time));
