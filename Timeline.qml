@@ -160,6 +160,17 @@ Item {
             }
 
 	    Button {
+	       text: "Done"
+	       height: parent.height
+	       visible: !warning.visible
+
+	       onClicked: {
+	            editor.done ()
+		    timeline.visible = true
+	       }
+	    }
+
+	    Button {
 	       text: "In"
 	       height: parent.height
 	       onClicked: editor.seekToInPoint()
@@ -185,17 +196,6 @@ Item {
 	       height: parent.height
 	       onClicked: editor.setOutPoint()
 	       visible: !editor.durationOnly
-	    }
-
-	    Button {
-	       text: "Done"
-	       height: parent.height
-	       visible: !warning.visible
-
-	       onClicked: {
-	            editor.done ()
-		    timeline.visible = true
-	       }
 	    }
 	    
 	    Text {
