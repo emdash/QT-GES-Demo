@@ -18,37 +18,29 @@
  */
 
 import Qt 4.7
+import GES 1.0
+import Gst 1.0
 
 Item {
      id:root
      property string uri
-     width: 800
-     height: 480
+     visible: false
 
-     Rectangle {
-     	 id:viewer
-	 width: 320
-	 height: 240
-         color: "blue"
+     function edit (uri) {
+         editorPipeline.setUri (uri)
+	 editorPipeline.pause()
+	 visible = true
+	 timeline.visible = false
      }
-
-     Joggle {
-     	 id:joggle
-         anchors {
-	     top: viewer.bottom
-	     topMargin: 12
-	     right: viewer.right
-	     left: viewer.left
-	 }
+     
+     GESTimelinePipeline {
+         id: editorPipeline
+	 surface: editorSurface
      }
-
-     Slider {
-     	 anchors {
-	     top: joggle.bottom
-	     topMargin: 12
-	     right: viewer.right
-	     left: viewer.left
-	 }
+     
+     MediaViewer {
+         surface: editorSurface
+	 pipeline: editorPipeline
+	 anchors.fill: parent
      }
-
 }
