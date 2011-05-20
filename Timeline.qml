@@ -60,7 +60,6 @@ Item {
 
         anchors {
             top: screen.top
-            bottom: toolBar.top
         }
     }
     
@@ -90,6 +89,7 @@ Item {
         Row {
             spacing: 24
 	    id:timelineButtons
+	    visible: timeline.visible
 	    
             anchors {
                 top: parent.top
@@ -105,7 +105,6 @@ Item {
                 id:clipButton
                 height: parent.height
                 text: "Add Clip"
-		visible: !preview.visible
 
                 onClicked: {
                     chooser.state = "visible"
@@ -116,60 +115,32 @@ Item {
                 id:titleButton
                 height: parent.height
                 text: "Add Title"
-		visible: !preview.visible
             }
 
             Button {
                 id:transitionButton
                 height: parent.height
                 text: "Add Crossfade"
-		visible: !preview.visible
 
                 onClicked: {
                 }
             }
 
-	    Button {
-	       id:pauseButton
-	       height: parent.height
-	       text: timelinePipeline.playing ? "Pause" : "Play"
-	       onClicked: {
-	          if (timelinePipeline.playing) {
-		     timelinePipeline.pause()
-		  } else {
-		     timelinePipeline.preview()
-		  }
-	       }
-	       visible: preview.visible
-	    }
-
         }
 
-	Slider {
-	       anchors {
-	       		top: parent.top
-			bottom: parent.bottom
-			left: timelineButtons.right
-			right: rightButtons.left
-			topMargin: 30
-			bottomMargin: 30
-			rightMargin: 12
-			leftMargin: 12
-	       }
+	MediaControls {
+	    visible: preview.visible
+	    anchors {
+	       left: parent.left
+	       right: rightButtons.left
+	       top: parent.top
+	       bottom: parent.bottom
+	       topMargin: 12
+	       bottomMargin: 12
+	       rightMargin: 12
+	    }
 
-	       visible: preview.visible
-	       max_duration: timelinePipeline.duration
-	       position: timelinePipeline.position
-
-	       MouseArea {
-		    anchors.fill: parent
-		    onPositionChanged: {
-		       timelinePipeline.seek(
-				Math.max(0,
-				     Math.min(parent.max_duration,
-					      (mouse.x / width) * parent.max_duration)))
-		    }
-	       }
+	    pipeline: timelinePipeline
 	}
 
 	Row {
