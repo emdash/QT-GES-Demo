@@ -50,7 +50,7 @@ Item {
 
     ReorderableList {
         id:timeline
-	visible: ! (timelinePipeline.playing || timelinePipeline.paused)
+	visible: true
         // create an item for each element in a ListModel
         // later the ListModel can be replaced with a proxy for a GESTimeline
 
@@ -209,13 +209,16 @@ Item {
                 id:previewButton
                 text: preview.visible ? "Back" : "Preview"
 		height: parent.height
+		visible: !editor.visible
 
                 onClicked: {
 	           if (preview.visible) {
 		      timelinePipeline.stop()
+		      timeline.visible = true
 		   }
 		   else {
 		      timelinePipeline.preview();
+		      timeline.visible = false
 		   }
                 }
             }
