@@ -58,6 +58,7 @@ bus_message_cb (GstBus * bus, GstMessage * message, Pipeline * pipeline)
 Pipeline::
 Pipeline()
 {
+  isUriSource = false;
   src = 0;
   mSurface = 0;
   
@@ -113,6 +114,25 @@ setSource (GstElement * inSrc)
   g_signal_connect(G_OBJECT(src), "pad-added",
 		   G_CALLBACK(pipeline_pad_added_cb), this);
 
+}
+
+void Pipeline::
+setUri(QString uri)
+{
+  if (!src) {
+    setSource(gst_element_factory_make("uridecodebin", NULL));
+    isUriSource = true;
+  } else if (!isUriSource) {
+    qDebug () << "This pipeline is displaying something other than a file."
+      " You cannot set the uri.";
+    return;
+  }
+
+  if (paused() || playing ()) {
+    stop();
+  }
+
+  g_object_set (G_OBJECT(src), "uri", (char *) uri.toAscii().constData(), NULL);
 }
 
 Pipeline::~Pipeline()

@@ -32,6 +32,7 @@ class Pipeline : public QObject {
   Q_INVOKABLE void pause();
   Q_INVOKABLE void stop();
   Q_INVOKABLE void seek(double position);
+  Q_INVOKABLE void setUri(QString uri);
 
  signals:
   void playingChanged(bool isPlaying);
@@ -52,6 +53,8 @@ class Pipeline : public QObject {
   gint64 mPosition;
   gint64 mDuration;
   gint64 mSeekRequest;
+
+  bool isUriSource;
   
   GstElement *src;
   GstElement *pipeline;
