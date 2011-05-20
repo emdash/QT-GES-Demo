@@ -23,42 +23,52 @@ import Gst 1.0
 
 Item {
      id:root
-     property alias inPoint: inPointPipeline.position
-     property alias outPoint: outPointPipeline.position
      visible: false
      property int curindex;
+     property double inPoint
+     property double outPoint
 
      function edit (index, uri, in_point, out_point, duration_only) {
          if (duration_only) {
 	     return;
 	 }
          curindex = index
-         inPointPipeline.setUri (uri)
-	 inPointPipeline.pause()
-	 inPointPipeline.seek (in_point)
-	 outPointPipeline.setUri (uri)
-	 outPointPipeline.pause ()
-	 outPointPipeline.seek (out_point)
+         editorPipeline.setUri (uri)
+	 editorPipeline.pause()
+	 editorPipeline.seek (in_point)
+	 inPoint = in_point
+	 outPoint = out_point
 	 timeline.visible = false
 	 visible = true
      }
 
+     function seekToInPoint() {
+         editorPipeline.seek (inPoint)
+     }
+
+     function seekToOutPoint() {
+         editorPipeline.seek (outPoint)
+     }
+
+     function setOutPoint () {
+         outPoint = editorPipeline.position
+     }
+
+     function setInPoint () {
+         inPoint = editorPipeline.position
+     }
+
      function done () {
          editor.visible = false
-         timeline.model.setInPoint (curindex, inPointPipeline.position)
-	 timeline.model.setOutPoint (curindex, outPointPipeline.position)
-	 inPointPipeline.stop()
-	 outPointPipeline.stop()
+	 timeline.visible = true
+	 editorPipeline.stop()
+	 timeline.model.setInPoint (curindex, inPoint)
+	 timeline.model.setOutPoint (curindex, outPoint)
      }
      
      GESTimelinePipeline {
-         id: inPointPipeline
-	 surface: inPointSurface
-     }
-
-     GESTimelinePipeline {
-        id: outPointPipeline
-	surface: outPointSurface
+         id: editorPipeline
+	 surface: editorSurface
      }
 
      MediaViewer {
@@ -70,21 +80,7 @@ Item {
 	 
 	 text: "In Point"
 	 width: (parent.width / 2) - 12
-         surface: inPointSurface
-	 pipeline: inPointPipeline
+         surface: editorSurface
+	 pipeline: editorPipeline
      }
-
-     MediaViewer {
-         anchors {
-	     right: parent.right
-	     top: parent.top
-	     bottom: parent.bottom
-	 }
-
-	 text: "Out Point"
-	 width: (parent.width / 2) - 12
-         surface: outPointSurface
-	 pipeline: outPointPipeline
-     }
-
 }

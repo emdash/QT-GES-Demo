@@ -157,6 +157,30 @@ Item {
             }
 
 	    Button {
+	       text: "In"
+	       height: parent.height
+	       onClicked: editor.seekToInPoint()
+	    }
+
+	    Button {
+	       text: "Out"
+	       height: parent.height
+	       onClicked: editor.seekToOutPoint()
+	    }
+
+	    Button {
+	       text: "Set In"
+	       height: parent.height
+	       onClicked: editor.setInPoint()
+	    }
+
+	    Button {
+	       text: "Set Out"
+	       height: parent.height
+	       onClicked: editor.setOutPoint()
+	    }
+
+	    Button {
 	       text: "Done"
 	       height: parent.height
 	       visible: !warning.visible
@@ -166,11 +190,11 @@ Item {
 		    timeline.visible = true
 	       }
 	    }
-
+	    
 	    Text {
 	        id: warning
 		height: parent.height
-		verticalAlignment: Text.AlivnVCenter
+		verticalAlignment: Text.AlignVCenter
 		visible: editor.outPoint < editor.inPoint
 		text: "The in-point must be before the out-point"
 	    }
