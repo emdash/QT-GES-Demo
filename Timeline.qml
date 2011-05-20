@@ -72,6 +72,21 @@ Item {
 	visible: timelinePipeline.playing || timelinePipeline.paused
     }
 
+    // Editor for trimming clips
+
+    Editor {
+        id: editor
+        anchors {
+	    left: parent.left
+	    right: parent.right
+	    leftMargin: 12
+	    rightMargin: 12
+	    topMargin: 12
+	    top: parent.top
+	    bottom: toolBar.top
+	}
+    }
+
     // main toolbar
 
     Rectangle {

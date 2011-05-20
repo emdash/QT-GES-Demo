@@ -39,6 +39,13 @@ Item {
         source: thumb_uri
         sourceSize.width: parent.width 
         fillMode: Image.PreserveAspectFit
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                editor.edit (media_uri)
+            }
+        }
     }
 
     Button {
