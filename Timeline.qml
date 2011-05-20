@@ -60,6 +60,7 @@ Item {
 
         anchors {
             top: screen.top
+	    bottom: toolBar.top
         }
     }
     
