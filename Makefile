@@ -37,3 +37,7 @@ check:
 
 debug:
 	@echo "QTMOBILITY_ROOT is:" $(QTMOBILITY_ROOT)
+
+install:
+	cp launch.sh /usr/bin/ges-demo;\
+        cp ges_demo.desktop /usr/share/applications
