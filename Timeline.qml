@@ -140,7 +140,6 @@ Item {
                 onClicked: {
                 }
             }
-
         }
 
 	Row {
@@ -160,11 +159,20 @@ Item {
 	    Button {
 	       text: "Done"
 	       height: parent.height
+	       visible: !warning.visible
 
 	       onClicked: {
 		    editor.visible = false
 		    timeline.visible = true
 	       }
+	    }
+
+	    Text {
+	        id: warning
+		height: parent.height
+		verticalAlignment: Text.AlivnVCenter
+		visible: editor.outPoint < editor.inPoint
+		text: "The in-point must be before the out-point"
 	    }
 
 	    spacing: 24

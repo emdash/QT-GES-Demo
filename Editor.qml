@@ -24,6 +24,8 @@ import Gst 1.0
 Item {
      id:root
      property string uri
+     property alias inPoint: inPointPipeline.position
+     property alias outPoint: outPointPipeline.position
      visible: false
 
      function edit (uri) {
@@ -31,8 +33,9 @@ Item {
 	 inPointPipeline.pause()
 	 outPointPipeline.setUri (uri)
 	 outPointPipeline.pause ()
-	 visible = true
+	 outPointPipeline.seek (outPointPipeline.duration)
 	 timeline.visible = false
+	 visible = true
      }
      
      GESTimelinePipeline {
