@@ -27,17 +27,20 @@ Item {
      property int curindex;
      property double inPoint
      property double outPoint
+     property bool durationOnly
 
      function edit (index, uri, in_point, out_point, duration_only) {
-         if (duration_only) {
-	     return;
-	 }
          curindex = index
          editorPipeline.setUri (uri)
 	 editorPipeline.pause()
-	 editorPipeline.seek (in_point)
-	 inPoint = in_point
+	 if (!duration_only) {
+	    editorPipeline.seek (in_point)
+	    inPoint = in_point
+	 } else {
+	    inPoint = 0
+	 }
 	 outPoint = out_point
+	 durationOnly = duration_only
 	 timeline.visible = false
 	 visible = true
      }
@@ -62,7 +65,9 @@ Item {
          editor.visible = false
 	 timeline.visible = true
 	 editorPipeline.stop()
-	 timeline.model.setInPoint (curindex, inPoint)
+	 if (!durationOnly) {	 
+	    timeline.model.setInPoint (curindex, inPoint)
+	 }
 	 timeline.model.setOutPoint (curindex, outPoint)
      }
      
@@ -85,5 +90,6 @@ Item {
 	 inPoint: parent.inPoint
 	 outPoint: parent.outPoint
 	 showEditPoints: true
+	 durationOnly: parent.durationOnly
      }
 }

@@ -9,10 +9,12 @@ Item {
     property alias inPoint: slider.inPoint
     property alias outPoint: slider.outPoint
     property alias showEditPoints: slider.showEditPoints
+    property bool  durationOnly: false 
      
     Button {
        id:pauseButton
        text: pipeline.playing ? "Pause" : "Play"
+       visible: !durationOnly
        onClicked: {
 	  if (pipeline.playing) {
 	     pipeline.pause()
@@ -43,6 +45,7 @@ Item {
 
 	   max_duration: pipeline.duration
 	   position: pipeline.position
+	   visible: !durationOnly
 
 	   MouseArea {
 		anchors.fill: parent

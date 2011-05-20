@@ -29,6 +29,7 @@ Item {
      property alias inPoint: controls.inPoint
      property alias outPoint: controls.outPoint
      property alias showEditPoints: controls.showEditPoints
+     property alias durationOnly: controls.durationOnly
 
      Text {
          id: label

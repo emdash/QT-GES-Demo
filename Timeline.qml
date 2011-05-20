@@ -163,24 +163,28 @@ Item {
 	       text: "In"
 	       height: parent.height
 	       onClicked: editor.seekToInPoint()
+	       visible: !editor.durationOnly
 	    }
 
 	    Button {
 	       text: "Out"
 	       height: parent.height
 	       onClicked: editor.seekToOutPoint()
+	       visible: !editor.durationOnly
 	    }
 
 	    Button {
 	       text: "Set In"
 	       height: parent.height
 	       onClicked: editor.setInPoint()
+	       visible: !editor.durationOnly
 	    }
 
 	    Button {
 	       text: "Set Out"
 	       height: parent.height
 	       onClicked: editor.setOutPoint()
+	       visible: !editor.durationOnly
 	    }
 
 	    Button {
