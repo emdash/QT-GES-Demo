@@ -28,13 +28,14 @@ Item {
      visible: false
      property int curindex;
 
-     function edit (index, uri) {
+     function edit (index, uri, in_point, out_point) {
          curindex = index
          inPointPipeline.setUri (uri)
 	 inPointPipeline.pause()
+	 inPointPipeline.seek (in_point)
 	 outPointPipeline.setUri (uri)
 	 outPointPipeline.pause ()
-	 outPointPipeline.seek (outPointPipeline.duration)
+	 outPointPipeline.seek (out_point)
 	 timeline.visible = false
 	 visible = true
      }
