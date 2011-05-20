@@ -25,12 +25,25 @@ Item {
      id:root
      property GESTimelinePipeline pipeline
      property GstVideoSurface surface
+     property alias text: label.text
+
+     Text {
+         id: label
+         anchors {
+	     top: parent.top
+	     horizontalCenter: parent.horizontalCenter
+	 }
+	 font.pixelSize: 36
+	 text: "label me"
+	 color: "white"
+     }
      
      GstVideoItem {
      	 id:viewer
-	 x: parent.x
-	 y: parent.y
-	 size: Qt.size(parent.width, parent.height - controls.height - 24)
+	 x: 0
+	 y: label.height
+	 size: Qt.size(parent.width, parent.height - controls.height -
+	               label.height - 24)
 	 surface: parent.surface
      }
 
