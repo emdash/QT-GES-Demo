@@ -28,7 +28,10 @@ Item {
      visible: false
      property int curindex;
 
-     function edit (index, uri, in_point, out_point) {
+     function edit (index, uri, in_point, out_point, duration_only) {
+         if (duration_only) {
+	     return;
+	 }
          curindex = index
          inPointPipeline.setUri (uri)
 	 inPointPipeline.pause()
