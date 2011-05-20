@@ -285,13 +285,17 @@ Item {
  
     ClipChooser {
         id:chooser
-        state: "invisible"
-        y: 0
-        visible_y: toolBar.height
-        height: screen.height - visible_y
+	visible: timeline.visible
+
+	anchors {
+	    left: screen.left
+	    right: screen.right
+	    bottom: toolBar.top
+	}
+
+	height: 200
 
         onItemChosen: {
-            chooser.state = "invisible"
 	    console.log(item)
             if (item != null) {
                 timeline.model.appendPath(item)
