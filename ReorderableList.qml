@@ -153,6 +153,11 @@ Item {
                 onReleased: {
                     child.parent = container 
                     hand.visible = false
+		    if ((mx == mouse.x) && (my == mouse.y)) {
+		        console.log ("cur: " + cur + "index: " + index)
+			editor.edit (index, media_uri, in_point, out_point,
+			             duration_only)
+		    }
                 }
 
                 onPositionChanged: {
