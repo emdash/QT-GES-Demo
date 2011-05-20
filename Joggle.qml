@@ -21,13 +21,9 @@ import Qt 4.7
 
 
 Rectangle {
-    anchors {
-    	    right: parent.right
-	    left: parent.left
-    }
+    id: root
 
-    property int duration: 100
-    property int position: 0
+    property double position: 0
 
     color: "grey"
     height: 25
@@ -35,10 +31,11 @@ Rectangle {
 
     Repeater {
     	id:stripes
-	model: 8
+	model: (parent.width / 50) + 2
+	
 	delegate: Image {
 	    id:stripe
-	    height: 25
+	    height: root.height
 	    source: "images/stripes.png"
 	    fillMode: Image.TileHorizontally
 	    opacity: 0.5
@@ -61,7 +58,7 @@ Rectangle {
 	      }
 	      
 	      onPositionChanged: {
-	      		position = curpos + (mouse.x - mdown)
+	      		position = Math.max(0, curpos + (mouse.x - mdown))
 	      }
     }
 
@@ -73,11 +70,5 @@ Rectangle {
 	}
 	border.width: 1
 	border.color: "gray"
-    }
-
-    Text {
-    	 anchors.left: parent.left
-	 anchors.top: parent.top
-    	 text: position
     }
 }
