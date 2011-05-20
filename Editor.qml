@@ -82,5 +82,8 @@ Item {
 	 width: (parent.width / 2) - 12
          surface: editorSurface
 	 pipeline: editorPipeline
+	 inPoint: parent.inPoint
+	 outPoint: parent.outPoint
+	 showEditPoints: true
      }
 }

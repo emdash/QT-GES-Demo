@@ -6,6 +6,9 @@ Item {
     id: root
 
     property GESTimelinePipeline pipeline
+    property alias inPoint: slider.inPoint
+    property alias outPoint: slider.outPoint
+    property alias showEditPoints: slider.showEditPoints
      
     Button {
        id:pauseButton
@@ -27,6 +30,7 @@ Item {
     }
 
     Slider {
+           id: slider
 	   anchors {
 		    top: parent.top
 		    bottom: parent.bottom

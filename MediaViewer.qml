@@ -26,6 +26,9 @@ Item {
      property GESTimelinePipeline pipeline
      property GstVideoSurface surface
      property alias text: label.text
+     property alias inPoint: controls.inPoint
+     property alias outPoint: controls.outPoint
+     property alias showEditPoints: controls.showEditPoints
 
      Text {
          id: label

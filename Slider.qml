@@ -21,11 +21,11 @@ import Qt 4.7
 
 Rectangle {
 
-	  property double start: 50
-	  property double duration: 500
+	  property double inPoint: 50
+	  property double outPoint: 500
+	  property bool showEditPoints: false
 	  property double max_duration: 1000
 	  property double position: 0
-	  property bool edit_points: false
 	  
 	  anchors {
 	  	  right: parent.right
@@ -40,11 +40,11 @@ Rectangle {
 		    	top: parent.top
 			    bottom: parent.bottom
 		    }
-		    x: 100
-		    width: 100
+		    x: ((inPoint / max_duration) * parent.width)
+		    width: ((outPoint - inPoint) / max_duration) * parent.width
 		    color: "red"
-		    radius: 5
-		    visible: edit_points
+		    radius: 0
+		    visible: showEditPoints
 	  }
 
 	  Image {
