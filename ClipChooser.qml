@@ -36,37 +36,31 @@ Item {
         Repeater {
             model: ListModel {
 	    	   id:data
-	    	   ListElement {
-	    	   	   thumb: "media/thumbnails/20100510_007.png"
-			       uri: "media/20100510_007.jpg"
-	           }
-
-               ListElement {
-                   thumb: "media/thumbnails/20100512_003.png"
-                   uri: "media/20100512_003.jpg"
-               }
-
-	    	   ListElement {
-		   	       thumb: "media/thumbnails/small-mvi_0009.png"
-			       uri: "media/small-mvi_0009.avi"
-	           }
-    
-	    	   ListElement {
-		   	       thumb: "media/thumbnails/mid-Caterpilla_345C_Longfront_01.ogv.jpg"
-		   	       uri: "media/Caterpilla_345C_Longfront_01.ogv"
-	    	    }
-
-		       ListElement {
-			       thumb: "media/thumbnails/mid-Typing_example.ogv.jpg"
-			       uri: "media/Typing_example.ogv"
-		       }
+                    ListElement { uri: "20100516_005.mp4.avi" }
+                    ListElement { uri: "20100516_007.mp4.avi" }
+                    ListElement { uri: "20100516_015.jpg" }
+                    ListElement { uri: "20100525_003.mp4.avi" }
+                    ListElement { uri: "20100818_006.mp4.avi" }
+                    ListElement { uri: "20100818_011.mp4.avi" }
+                    ListElement { uri: "20101011_001.mp4.avi" }
+                    ListElement { uri: "20101105_002.mp4.avi" }
+                    ListElement { uri: "20110101_002.mp4.avi" }
+                    ListElement { uri: "20110101_003.mp4.avi" }
+                    ListElement { uri: "20110101_004.mp4.avi" }
+                    ListElement { uri: "20110101_006.mp4.avi" }
+                    ListElement { uri: "20110101_007.mp4.avi" }
+                    ListElement { uri: "20110202_008.jpg" }
+                    ListElement { uri: "20110202_023.jpg" }
+                    ListElement { uri: "20110216_004.jpg" }
+                    ListElement { uri: "20110218_010.jpg" }
+                    ListElement { uri: "20110227_002.jpg" }
            }
 
            delegate: Image {
 	            property int position: index
                 width: 100
                 height: 100
-                source: thumb
+                source: "media/thumbnails/" + uri + ".jpg"
                 fillMode: Image.PreserveAspectFit
            }
         }
@@ -119,7 +113,7 @@ Item {
         onClicked: {
 	    var idx = items.childAt(mouse.x, mouse.y).position
 	    var obj = data.get(idx)
-            itemChosen(obj.uri)
+            itemChosen("media/" + obj.uri)
         }
     }
 }

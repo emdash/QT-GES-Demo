@@ -74,19 +74,6 @@ Timeline(QObject *parent) : QAbstractListModel(parent)
   rolenames[duration_only_role] = "duration_only";
   setRoleNames(rolenames);
   row_count = 0;
-
-  // TODO: implement automatic thumbnailing. For now we have a static
-  // hashtable that maps media uris the thumbail uri
-  
-  thumbs["media/20100510_007.jpg"] = "media/thumbnails/20100510_007.png";
-  thumbs["media/20100512_003.jpg"] = "media/thumbnails/20100512_003.png";
-  thumbs["media/small-mvi_0009.avi"] = "media/thumbnails/small-mvi_0009.png";
-  thumbs["media/20100510_007.jpg"] = "media/thumbnails/20100510_007.png";
-
-  thumbs["media/small-mvi_0009.avi"] = "media/thumbnails/small-mvi_0009.png";
-  thumbs["media/Caterpilla_345C_Longfront_01.ogv"] =
-      "media/thumbnails/mid-Caterpilla_345C_Longfront_01.ogv.jpg";
-  thumbs["media/Typing_example.ogv"] = "media/thumbnails/mid-Typing_example.ogv.jpg";
 }
 
 Timeline::~Timeline()
@@ -115,8 +102,9 @@ thumbForObject(GESTimelineObject * obj) const
   QString quri(uri);
   g_free(uri);
   QString local = QUrl(quri).toLocalFile();
-  QString relative = QDir::current().relativeFilePath(local);
-  return thumbs[relative];
+  QString relative = QDir("media/").relativeFilePath(local);
+  qDebug() << local << relative;
+  return "media/thumbnails/" + relative + ".jpg";
 }
 
 static QString mediaUri(GESTimelineObject *obj) {
